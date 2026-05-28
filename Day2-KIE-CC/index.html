@@ -88,7 +88,39 @@
   }
   .nav .cta:hover{transform:translateY(-1px);box-shadow:0 16px 38px -10px rgba(230,185,121,0.75),inset 0 1px 0 rgba(255,255,255,0.55)}
   .nav .cta:focus-visible{outline:2px solid var(--gold-2);outline-offset:3px}
-  @media (max-width:780px){.nav ul{display:none}.nav{padding:18px 20px}}
+  .nav-toggle{display:none;background:transparent;border:1px solid rgba(230,185,121,0.35);border-radius:10px;width:42px;height:42px;cursor:pointer;align-items:center;justify-content:center;padding:0;position:relative;z-index:60;transition:border-color .25s ease,background .25s ease}
+  .nav-toggle:hover{border-color:var(--gold-2);background:rgba(230,185,121,0.08)}
+  .nav-toggle:focus-visible{outline:2px solid var(--gold-2);outline-offset:3px}
+  .nav-toggle span{display:block;position:absolute;left:11px;right:11px;height:1.5px;background:var(--gold-2);border-radius:2px;transition:transform .3s cubic-bezier(.2,.8,.2,1),opacity .2s ease,top .3s cubic-bezier(.2,.8,.2,1)}
+  .nav-toggle span:nth-child(1){top:14px}
+  .nav-toggle span:nth-child(2){top:20px}
+  .nav-toggle span:nth-child(3){top:26px}
+  .nav-toggle[aria-expanded="true"] span:nth-child(1){top:20px;transform:rotate(45deg)}
+  .nav-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
+  .nav-toggle[aria-expanded="true"] span:nth-child(3){top:20px;transform:rotate(-45deg)}
+  @media (max-width:780px){
+    .nav{padding:14px 18px}
+    .nav .cta{display:none}
+    .nav-toggle{display:inline-flex}
+    .nav ul{
+      position:fixed;top:70px;right:14px;left:14px;
+      flex-direction:column;align-items:flex-start;
+      gap:4px;font-size:13px;letter-spacing:0.26em;
+      background:linear-gradient(180deg,rgba(28,20,6,0.98),rgba(0,0,0,0.98));
+      border:1px solid rgba(230,185,121,0.22);
+      border-radius:16px;
+      box-shadow:0 24px 60px -20px rgba(0,0,0,0.8),0 0 0 1px rgba(230,185,121,0.06);
+      backdrop-filter:blur(16px);
+      padding:10px 6px;z-index:55;
+      opacity:0;pointer-events:none;transform:translateY(-8px) scale(.98);transform-origin:top right;
+      transition:opacity .25s ease,transform .3s cubic-bezier(.2,.8,.2,1);
+    }
+    .nav ul li{width:100%}
+    .nav ul a{display:block;width:100%;color:#e8d9b8;padding:14px 16px;border-radius:10px;transition:background .2s ease,color .2s ease}
+    .nav ul a::after{display:none}
+    .nav ul a:hover{background:rgba(230,185,121,0.08);color:var(--gold-2)}
+    .nav.open ul{opacity:1;pointer-events:auto;transform:translateY(0) scale(1)}
+  }
 
   /* HERO ─────────────────────────────────────── */
   .hero{
@@ -733,7 +765,25 @@
     <li><a href="Sights.html">Adventure</a></li>
   </ul>
   <a class="cta" href="#start">Get Started</a>
+  <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="primary-nav">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<script>
+  (function(){
+    const nav=document.querySelector('.nav');
+    const btn=document.querySelector('.nav-toggle');
+    if(!nav||!btn)return;
+    const close=()=>{nav.classList.remove('open');btn.setAttribute('aria-expanded','false')};
+    btn.addEventListener('click',()=>{
+      const open=nav.classList.toggle('open');
+      btn.setAttribute('aria-expanded',open?'true':'false');
+    });
+    document.addEventListener('click',(e)=>{if(nav.classList.contains('open')&&!nav.contains(e.target))close()});
+    nav.querySelectorAll('ul a').forEach(a=>a.addEventListener('click',close));
+    window.addEventListener('resize',()=>{if(window.innerWidth>780)close()});
+  })();
+</script>
 
 <header class="hero">
   <div class="hero-bg"></div>
