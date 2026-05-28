@@ -985,18 +985,14 @@ function submitForm(e) {
     body: JSON.stringify(payload)
   });
 
-  var supabase = fetch(SUPABASE_URL + '/rest/v1/rpc/submit_contact', {
+  var supabase = fetch(SUPABASE_URL + '/functions/v1/submit', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'apikey': SUPABASE_ANON_KEY,
       'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
     },
-    body: JSON.stringify({
-      p_name:    payload.name,
-      p_email:   payload.email,
-      p_message: payload.message
-    })
+    body: JSON.stringify(payload)
   }).then(function(r){
     if (!r.ok) { return r.text().then(function(t){ throw new Error('Supabase ' + r.status + ': ' + t); }); }
   });
