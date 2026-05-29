@@ -12,7 +12,7 @@
   "crons": [
     {
       "path": "/api/briefing",
-      "schedule": "30 12 * * *"
+      "schedule": "40 13 * * *"
     },
     {
       "path": "/api/briefing",
