@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>TesterTech — Eight devices. One signal.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a0a;
+    --bg-elev:#111;
+    --ink:#f6f1e6;
+    --fg:#ffffff;
+    --muted:#9a9388;
+    --dim:#6a6a6a;
+    --line:rgba(255,255,255,0.08);
+    --hair:rgba(246,241,230,0.06);
+    --gold-1:#C6A559;
+    --gold-2:#E6B979;
+    --gold-deep:#8a6f33;
+    --gold-gradient:linear-gradient(135deg,#E6B979 0%,#C6A559 100%);
+    --light:#f4efe6;
+    --light-2:#e8e2d6;
+    --ink-dark:#1a1714;
+    --serif:'Fraunces','Times New Roman',serif;
+    --sans:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --gutter:36px;
+    --maxw:1320px;
+    --ease:cubic-bezier(.2,.8,.2,1);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:88px}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:400;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  body{min-height:100vh;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  ::selection{background:var(--gold-2);color:#0c0700}
+
+  /* film grain */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:200;opacity:.04;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  /* ─── NAV ─── */
+  .nav{
+    position:sticky;top:0;left:0;right:0;z-index:80;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 28px;
+    backdrop-filter:blur(18px) saturate(140%);
+    background:rgba(10,10,10,0.72);
+    border-bottom:1px solid var(--hair);
+  }
+  .nav .brand{display:flex;align-items:center;gap:12px}
+  .nav .brand img{width:34px;height:34px;filter:drop-shadow(0 0 14px rgba(230,185,121,0.45))}
+  .nav .brand .brand-word{font-family:var(--serif);font-weight:500;letter-spacing:-0.02em;font-size:21px;font-style:italic;color:var(--ink)}
+  .nav .brand .tld{background:var(--gold-gradient);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .nav .brand-divider{width:1px;height:20px;background:rgba(246,241,230,0.18);margin:0 6px}
+  .nav .brand-section{font-family:var(--mono);font-size:10.5px;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold-2);font-weight:500}
+  .nav ul{display:flex;gap:30px;list-style:none;margin:0;padding:0;font-size:13px;font-weight:500;color:#cdcdcd;letter-spacing:-0.005em}
+  .nav ul a{transition:color .2s ease;position:relative}
+  .nav ul a:hover{color:var(--gold-2)}
+  .nav ul a:focus-visible{outline:2px solid var(--gold-2);outline-offset:6px;border-radius:2px}
+  .nav .actions{display:flex;align-items:center;gap:10px}
+  .nav .cta{
+    font-family:var(--sans);font-size:12.5px;font-weight:600;letter-spacing:-0.005em;
+    color:#0c0700;background:linear-gradient(135deg,var(--gold-2),var(--gold-1));
+    padding:10px 18px;border-radius:999px;
+    box-shadow:0 8px 24px -10px rgba(230,185,121,0.55),inset 0 1px 0 rgba(255,255,255,0.4);
+    transition:transform .2s var(--ease),box-shadow .2s ease;
+  }
+  .nav .cta:hover{transform:translateY(-1px);box-shadow:0 14px 32px -10px rgba(230,185,121,0.75)}
+  .nav .cta:focus-visible{outline:2px solid var(--gold-2);outline-offset:3px}
+  .nav .ghost{
+    font-size:12.5px;font-weight:500;padding:9px 16px;border-radius:999px;
+    border:1px solid rgba(255,255,255,0.14);color:#dcdcdc;transition:all .2s ease;
+  }
+  .nav .ghost:hover{border-color:var(--gold-2);color:var(--gold-2)}
+  @media (max-width:880px){
+    .nav ul{display:none}
+    .nav{padding:12px 18px}
+    .nav .brand-divider,.nav .brand-section{display:none}
+    .nav .ghost{display:none}
+  }
+
+  /* ─── HERO ─── */
+  .hero{
+    position:relative;padding:90px var(--gutter) 80px;overflow:hidden;
+    background:
+      radial-gradient(900px 600px at 78% 30%, rgba(198,165,89,0.18), transparent 65%),
+      radial-gradient(700px 500px at 10% 80%, rgba(230,185,121,0.06), transparent 70%),
+      linear-gradient(180deg,#0a0a0a 0%,#070707 100%);
+  }
+  .hero-grid{
+    max-width:var(--maxw);margin:0 auto;
+    display:grid;grid-template-columns:1.05fr 1fr;gap:60px;align-items:center;
+  }
+  .hero .eyebrow{
+    display:inline-flex;align-items:center;gap:10px;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:0.32em;text-transform:uppercase;color:var(--gold-2);
+    margin-bottom:28px;font-weight:500;
+  }
+  .hero .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--gold-2);box-shadow:0 0 0 0 rgba(230,185,121,0.6);animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(230,185,121,0.6)}70%{box-shadow:0 0 0 12px rgba(230,185,121,0)}100%{box-shadow:0 0 0 0 rgba(230,185,121,0)}}
+  .hero h1{
+    font-family:var(--serif);font-weight:300;font-size:clamp(48px,7vw,108px);
+    line-height:0.96;letter-spacing:-0.035em;margin:0 0 24px;color:var(--ink);
+  }
+  .hero h1 em{font-style:italic;background:var(--gold-gradient);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:400}
+  .hero .lede{
+    font-size:17px;line-height:1.6;color:var(--muted);max-width:46ch;margin:0 0 36px;font-weight:400;
+  }
+  .hero .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:46px}
+  .hero-stats{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:22px;max-width:520px;
+    padding-top:24px;border-top:1px solid var(--hair);
+  }
+  .hero-stats .s .k{font-family:var(--mono);font-size:10px;letter-spacing:0.28em;text-transform:uppercase;color:#7a7468;margin-bottom:6px}
+  .hero-stats .s .v{font-family:var(--serif);font-size:30px;font-weight:400;letter-spacing:-0.025em;color:var(--ink);line-height:1}
+  .hero-stats .s .v em{font-style:italic;background:var(--gold-gradient);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero-visual{
+    position:relative;border-radius:24px;overflow:hidden;aspect-ratio:16/9;
+    background:linear-gradient(135deg,#1a1814,#0a0a0a);
+    box-shadow:
+      0 80px 140px -50px rgba(0,0,0,0.9),
+      0 30px 60px -30px rgba(198,165,89,0.18),
+      inset 0 1px 0 rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.06);
+  }
+  .hero-visual img,
+  .hero-visual video{width:100%;height:100%;object-fit:cover;display:block}
+  .hero-visual::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(180deg,transparent 60%,rgba(0,0,0,0.35) 100%);
+  }
+  .hero-visual .tag{
+    position:absolute;left:18px;bottom:18px;
+    font-family:var(--mono);font-size:10px;letter-spacing:0.26em;text-transform:uppercase;
+    color:var(--ink);background:rgba(8,8,8,0.55);backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,0.12);padding:7px 12px;border-radius:999px;
+  }
+
+  /* ─── BUTTONS ─── */
+  .btn{
+    font-family:var(--sans);font-size:13.5px;font-weight:600;letter-spacing:-0.005em;
+    padding:14px 26px;border-radius:999px;
+    display:inline-flex;align-items:center;gap:8px;
+    transition:transform .2s var(--ease),box-shadow .2s ease,background .25s ease,color .25s ease,border-color .25s ease;
+    cursor:pointer;border:none;
+  }
+  .btn.primary{
+    color:#0c0700;background:linear-gradient(135deg,var(--gold-2),var(--gold-1));
+    box-shadow:0 12px 30px -12px rgba(230,185,121,0.6),inset 0 1px 0 rgba(255,255,255,0.45);
+  }
+  .btn.primary:hover{transform:translateY(-2px);box-shadow:0 18px 40px -10px rgba(230,185,121,0.8)}
+  .btn.ghost{
+    color:var(--ink);background:transparent;border:1px solid rgba(246,241,230,0.22);
+  }
+  .btn.ghost:hover{border-color:var(--gold-2);color:var(--gold-2);background:rgba(230,185,121,0.06);transform:translateY(-2px)}
+  .btn.dark{
+    color:var(--light);background:var(--ink-dark);
+  }
+  .btn.dark:hover{transform:translateY(-2px);background:#0a0907}
+  .btn.line-dark{
+    color:var(--ink-dark);background:transparent;border:1px solid rgba(26,23,20,0.25);
+  }
+  .btn.line-dark:hover{border-color:var(--ink-dark);background:rgba(26,23,20,0.05);transform:translateY(-2px)}
+  .btn:focus-visible{outline:2px solid var(--gold-2);outline-offset:3px}
+
+  /* ─── JUMP STRIP ─── */
+  .jumpstrip{
+    position:sticky;top:62px;z-index:60;
+    background:rgba(10,10,10,0.85);backdrop-filter:blur(16px) saturate(140%);
+    border-bottom:1px solid var(--hair);
+  }
+  .jumpstrip .inner{
+    max-width:var(--maxw);margin:0 auto;padding:14px var(--gutter);
+    display:flex;align-items:center;gap:14px;overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .jumpstrip .inner::-webkit-scrollbar{display:none}
+  .jumpstrip .label{
+    font-family:var(--mono);font-size:10px;letter-spacing:0.28em;text-transform:uppercase;color:var(--dim);
+    flex-shrink:0;margin-right:6px;
+  }
+  .jumpstrip a{
+    flex-shrink:0;font-size:12.5px;font-weight:500;
+    padding:8px 16px;border-radius:999px;border:1px solid rgba(255,255,255,0.1);
+    color:#cdcdcd;transition:all .2s ease;letter-spacing:-0.005em;
+  }
+  .jumpstrip a:hover{border-color:var(--gold-2);color:var(--gold-2);background:rgba(230,185,121,0.06)}
+  .jumpstrip a:focus-visible{outline:2px solid var(--gold-2);outline-offset:3px}
+
+  /* ─── CATEGORY HEADERS ─── */
+  .cat{padding:90px var(--gutter) 40px;max-width:var(--maxw);margin:0 auto}
+  .cat-head{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;padding-bottom:24px;border-bottom:1px solid var(--hair)}
+  .cat-num{font-family:var(--mono);font-size:11px;letter-spacing:0.32em;text-transform:uppercase;color:var(--gold-2);font-weight:500}
+  .cat-name{font-family:var(--serif);font-weight:300;font-size:clamp(38px,5vw,68px);letter-spacing:-0.03em;color:var(--ink);margin:0;line-height:1}
+  .cat-name em{font-style:italic;background:var(--gold-gradient);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .cat-lede{font-size:14.5px;color:var(--muted);max-width:48ch;line-height:1.65;margin-left:auto}
+
+  /* ─── DEVICE CARD ─── */
+  .device{
+    max-width:var(--maxw);margin:0 auto;padding:36px var(--gutter) 90px;
+  }
+  .device-card{
+    background:var(--light);color:var(--ink-dark);
+    border-radius:28px;overflow:hidden;
+    display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:center;
+    box-shadow:
+      0 80px 140px -50px rgba(0,0,0,0.7),
+      0 30px 60px -30px rgba(198,165,89,0.15);
+    position:relative;
+  }
+  .device-card.reverse{grid-template-columns:1fr 1fr}
+  .device-card.reverse .device-media{order:2}
+  .device-card.reverse .device-body{order:1}
+  .device-card.dark{background:linear-gradient(160deg,#161616,#0a0a0a);color:var(--ink);border:1px solid rgba(255,255,255,0.06)}
+  .device-card.dark .device-media{margin:18px;border-radius:18px}
+  .device-card.dark .device-body .eyebrow{color:var(--gold-2)}
+  .device-card.dark .device-name{color:var(--ink)}
+  .device-card.dark .device-name em{background:var(--gold-gradient);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .device-card.dark .device-tagline{color:#cfc7b6}
+  .device-card.dark .device-pitch{color:#9a9388}
+  .device-card.dark .device-meta{border-top-color:rgba(255,255,255,0.08);color:var(--muted)}
+  .device-card.dark .chip{border-color:rgba(255,255,255,0.12);color:#cdcdcd;background:rgba(255,255,255,0.02)}
+  .device-card.dark .chip b{color:var(--gold-2)}
+  .device-card.dark .device-meta{border-top-color:rgba(255,255,255,0.08);color:var(--muted)}
+
+  .device-media{
+    position:relative;aspect-ratio:5/4;width:100%;
+    background:linear-gradient(160deg,#fff,#ece5d6);
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+  }
+  .device-media img{
+    width:100%;height:100%;object-fit:contain;object-position:center;
+    transition:transform .8s var(--ease);
+  }
+  .device-media:hover img{transform:scale(1.03)}
+  .device-media::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(800px 500px at 50% 100%,rgba(0,0,0,0.06),transparent 60%);
+  }
+  .device-media .badge{
+    position:absolute;top:18px;left:18px;
+    font-family:var(--mono);font-size:9.5px;letter-spacing:0.26em;text-transform:uppercase;font-weight:500;
+    padding:6px 12px;border-radius:999px;
+    background:rgba(255,255,255,0.78);backdrop-filter:blur(8px);
+    border:1px solid rgba(26,23,20,0.08);color:var(--ink-dark);
+  }
+  .device-card.dark .device-media .badge{background:rgba(8,8,8,0.7);border-color:rgba(255,255,255,0.12);color:var(--ink)}
+
+  .device-body{padding:54px 52px;display:flex;flex-direction:column;justify-content:center;gap:18px}
+  .device-body .eyebrow{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold-deep);font-weight:500;
+  }
+  .device-name{
+    font-family:var(--serif);font-weight:400;font-size:clamp(34px,3.8vw,50px);
+    letter-spacing:-0.028em;line-height:1.02;margin:0;color:var(--ink-dark);
+  }
+  .device-name em{font-style:italic;background:linear-gradient(135deg,#8a6f33,#C6A559);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:500}
+  .device-tagline{
+    font-size:16px;font-weight:500;color:#3a342a;margin:0;letter-spacing:-0.01em;
+  }
+  .device-pitch{
+    font-size:14.5px;line-height:1.65;color:#5a5247;margin:0;font-weight:400;max-width:38ch;
+  }
+  .device-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+  .chip{
+    font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;
+    padding:7px 12px;border-radius:999px;
+    background:rgba(26,23,20,0.04);border:1px solid rgba(26,23,20,0.08);color:#3a342a;
+  }
+  .chip b{color:var(--gold-deep);font-weight:600;margin-right:6px}
+  .device-cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .device-meta{
+    margin-top:18px;padding-top:18px;border-top:1px solid rgba(26,23,20,0.1);
+    font-family:var(--mono);font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;color:#7a7468;
+    display:flex;gap:14px;flex-wrap:wrap;
+  }
+  .device-meta i{font-style:normal;opacity:.5;margin:0 -4px}
+
+  @media (max-width:980px){
+    .device-card,.device-card.reverse{grid-template-columns:1fr;align-items:stretch}
+    .device-card.reverse .device-media{order:1}
+    .device-card.reverse .device-body{order:2}
+    .device-card.dark .device-media{margin:14px 14px 0;border-radius:14px}
+    .device-body{padding:38px 32px}
+    .device-media{aspect-ratio:5/4}
+  }
+  @media (max-width:560px){
+    .device-body{padding:32px 24px}
+    .device-cta-row .btn{flex:1;justify-content:center}
+  }
+
+  /* ─── COMPARE STRIP ─── */
+  .compare{padding:80px var(--gutter);max-width:var(--maxw);margin:0 auto}
+  .compare h2{
+    font-family:var(--serif);font-weight:300;font-size:clamp(36px,4.4vw,56px);
+    letter-spacing:-0.03em;margin:0 0 14px;line-height:1.02;
+  }
+  .compare h2 em{font-style:italic;background:var(--gold-gradient);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .compare .compare-lede{color:var(--muted);max-width:48ch;font-size:14.5px;line-height:1.65;margin:0 0 38px}
+  .compare-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+    background:var(--hair);border:1px solid var(--hair);border-radius:18px;overflow:hidden;
+  }
+  .compare-cell{
+    background:#080808;padding:30px 26px;display:flex;flex-direction:column;gap:14px;
+    transition:background .3s ease;
+  }
+  .compare-cell:hover{background:#0e0e0e}
+  .compare-cell h4{
+    font-family:var(--serif);font-weight:400;font-size:24px;letter-spacing:-0.02em;margin:0;color:var(--ink);line-height:1.1;
+  }
+  .compare-cell h4 em{font-style:italic;background:var(--gold-gradient);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .compare-cell .kc{font-family:var(--mono);font-size:9.5px;letter-spacing:0.26em;text-transform:uppercase;color:var(--gold-2);font-weight:500}
+  .compare-row{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--hair);padding-top:10px;font-size:13px;color:#cdcdcd}
+  .compare-row .rk{font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#7a7468}
+  .compare-row .rv{font-family:var(--serif);font-style:italic;font-weight:500;color:var(--ink);font-size:15px}
+  @media (max-width:980px){.compare-grid{grid-template-columns:1fr 1fr}}
+  @media (max-width:560px){.compare-grid{grid-template-columns:1fr}}
+
+  /* ─── CLOSING BAND ─── */
+  .closing{
+    margin:60px auto 80px;max-width:var(--maxw);padding:0 var(--gutter);
+  }
+  .closing-inner{
+    background:linear-gradient(135deg,#1a1814,#0a0a0a);
+    border:1px solid rgba(230,185,121,0.16);
+    border-radius:28px;padding:80px 60px;
+    display:grid;grid-template-columns:1.3fr 1fr;gap:48px;align-items:center;
+    position:relative;overflow:hidden;
+  }
+  .closing-inner::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(600px 400px at 90% 100%,rgba(230,185,121,0.15),transparent 60%);
+  }
+  .closing h2{
+    font-family:var(--serif);font-weight:300;font-size:clamp(38px,5vw,72px);
+    letter-spacing:-0.035em;margin:0;line-height:1.0;max-width:14ch;color:var(--ink);position:relative;
+  }
+  .closing h2 em{font-style:italic;background:var(--gold-gradient);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .closing .right{display:flex;flex-direction:column;gap:18px;position:relative}
+  .closing .right p{margin:0;color:var(--muted);font-size:14.5px;line-height:1.65;max-width:42ch}
+  .closing .actions{display:flex;gap:12px;flex-wrap:wrap}
+  @media (max-width:880px){
+    .closing-inner{grid-template-columns:1fr;padding:54px 32px;gap:24px}
+  }
+
+  /* ─── FOOTER ─── */
+  footer{background:#050505;border-top:1px solid var(--hair);margin-top:40px}
+  .footcol{
+    max-width:var(--maxw);margin:0 auto;padding:64px var(--gutter) 36px;
+    display:grid;grid-template-columns:1.2fr repeat(3,1fr);gap:46px;
+  }
+  .footcol .mast{display:flex;flex-direction:column;gap:14px}
+  .footcol .mast .lock{font-family:var(--serif);font-style:italic;font-size:30px;font-weight:500;letter-spacing:-0.025em;color:var(--ink)}
+  .footcol .mast .lock span{background:var(--gold-gradient);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .footcol .mast p{margin:0;font-size:13px;color:var(--muted);line-height:1.65;max-width:34ch}
+  .col-h{font-family:var(--mono);font-size:10.5px;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold-2);font-weight:500;margin-bottom:14px}
+  .col-list{display:flex;flex-direction:column;gap:9px;font-size:13px;color:#cdcdcd}
+  .col-list a{transition:color .2s ease}
+  .col-list a:hover{color:var(--gold-2)}
+  .col-list a:focus-visible{outline:2px solid var(--gold-2);outline-offset:3px;border-radius:2px}
+  .foot-meta{
+    max-width:var(--maxw);margin:0 auto;padding:20px var(--gutter) 30px;
+    display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;
+    border-top:1px solid var(--hair);font-family:var(--mono);font-size:10px;
+    letter-spacing:0.22em;text-transform:uppercase;color:#5a5a5a;
+  }
+  .foot-meta .live{display:inline-flex;align-items:center;gap:8px}
+  .foot-meta .live i{display:inline-block;width:6px;height:6px;border-radius:50%;background:#5dd06a;box-shadow:0 0 10px rgba(93,208,106,0.65);animation:livePulse 2.2s ease-in-out infinite}
+  @keyframes livePulse{0%,100%{opacity:1}50%{opacity:0.4}}
+  .foot-meta a:hover{color:var(--gold-2)}
+  @media (max-width:880px){.footcol{grid-template-columns:1fr 1fr;gap:32px;padding:48px 22px 28px}}
+  @media (max-width:560px){.footcol{grid-template-columns:1fr}}
+
+  /* ─── RESPONSIVE TIERS ─── */
+  @media (max-width:1180px){
+    .hero{padding:80px var(--gutter) 70px}
+    .cat{padding:80px var(--gutter) 36px}
+    .device{padding:32px var(--gutter) 80px}
+  }
+  @media (max-width:880px){
+    .hero-grid{grid-template-columns:1fr;gap:42px}
+    .hero-stats{max-width:none}
+    .closing-inner{padding:48px 28px}
+    :root{--gutter:22px}
+  }
+  @media (max-width:560px){
+    .hero{padding:60px var(--gutter) 50px}
+    .cat{padding:60px var(--gutter) 28px}
+    .device{padding:24px var(--gutter) 64px}
+    .hero .cta-row{flex-direction:column}
+    .hero .cta-row .btn{width:100%;justify-content:center}
+    .hero-stats{grid-template-columns:1fr;gap:12px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<header class="nav">
+  <a class="brand" href="index.html" aria-label="Tester.io home">
+    <img src="brand_assets/Tester Logo.png" alt="" />
+    <span class="brand-word">Tester<span class="tld">.io</span></span>
+    <span class="brand-divider" aria-hidden="true"></span>
+    <span class="brand-section">TesterTech</span>
+  </a>
+  <nav aria-label="Devices">
+    <ul>
+      <li><a href="#watches">Watches</a></li>
+      <li><a href="#glasses">Glasses</a></li>
+      <li><a href="#assistants">Assistants</a></li>
+      <li><a href="#wearables">Wearables</a></li>
+      <li><a href="#compare">Compare</a></li>
+    </ul>
+  </nav>
+  <div class="actions">
+    <a class="ghost" href="index.html">← Tester.io</a>
+    <a class="cta" href="index.html#start">Buy now</a>
+  </div>
+</header>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="eyebrow"><span class="dot"></span> TesterTech — consumer hardware</div>
+      <h1>Eight devices.<br/><em>One signal.</em></h1>
+      <p class="lede">Watches, glasses, voice assistants and the rest of the smart-home stack — engineered around the same QA loop that powers Tester.io. Designed in Berlin, tested everywhere.</p>
+      <div class="cta-row">
+        <a class="btn primary" href="#watches">Explore the lineup ↓</a>
+      </div>
+      <div class="hero-stats">
+        <div class="s"><div class="k">Devices</div><div class="v"><em>8</em></div></div>
+        <div class="s"><div class="k">Categories</div><div class="v">4</div></div>
+        <div class="s"><div class="k">Shipping</div><div class="v"><em>Q3</em> '26</div></div>
+      </div>
+    </div>
+    <figure class="hero-visual">
+      <video
+        src="media/tt-showcase.mp4"
+        poster="media/img/tt-watch-pro.png"
+        autoplay muted loop playsinline preload="metadata"
+        aria-label="TesterTech 8-device showcase video">
+      </video>
+      <span class="tag">TesterTech · The lineup</span>
+    </figure>
+  </div>
+</section>
+
+<!-- ─── JUMP STRIP ─── -->
+<div class="jumpstrip">
+  <div class="inner">
+    <span class="label">Jump to</span>
+    <a href="#watches">Watches</a>
+    <a href="#glasses">Glasses</a>
+    <a href="#assistants">Assistants</a>
+    <a href="#wearables">Wearables</a>
+    <a href="#compare">Compare</a>
+  </div>
+</div>
+
+<!-- ─── 01 · WATCHES ─── -->
+<section class="cat" id="watches">
+  <div class="cat-head">
+    <span class="cat-num">01 / Category</span>
+    <h2 class="cat-name">Watches, <em>refined.</em></h2>
+    <p class="cat-lede">Two takes on the wrist — a titanium flagship and an everyday in aluminum. Both run the same signal graph that powers Tester.io.</p>
+  </div>
+</section>
+
+<section class="device">
+  <article class="device-card" id="watch-pro" aria-labelledby="watch-pro-name">
+    <figure class="device-media">
+      <span class="badge">● Available</span>
+      <img src="media/img/tt-watch-pro.png" alt="Tester Watch Pro — whole watch and exploded view of components" loading="lazy" />
+    </figure>
+    <div class="device-body">
+      <span class="eyebrow">01 — Watches · Flagship</span>
+      <h3 class="device-name" id="watch-pro-name">Tester Watch <em>Pro</em></h3>
+      <p class="device-tagline">The titanium flagship.</p>
+      <p class="device-pitch">Sapphire crystal, sub-millisecond telemetry, and a 7-day cell in a 42mm titanium case. Built for those who measure the world before they trust it.</p>
+      <div class="device-chips">
+        <span class="chip"><b>42mm</b> Titanium</span>
+        <span class="chip"><b>Sub-ms</b> Telemetry</span>
+        <span class="chip"><b>7-day</b> Battery</span>
+        <span class="chip"><b>Sapphire</b> Crystal</span>
+      </div>
+      <div class="device-cta-row">
+        <a class="btn dark" href="product.html">Buy — from $849 →</a>
+        <a class="btn line-dark" href="#compare">Compare</a>
+      </div>
+      <div class="device-meta"><span>Ships Q3 '26</span><i>·</i><span>FDA Class II pending</span><i>·</i><span>CE / FCC</span></div>
+    </div>
+  </article>
+</section>
+
+<section class="device">
+  <article class="device-card reverse" id="watch-air" aria-labelledby="watch-air-name">
+    <figure class="device-media">
+      <span class="badge">● Available</span>
+      <img src="media/img/tt-watch-air.png" alt="Tester Watch Air — whole watch and exploded view of components" loading="lazy" />
+    </figure>
+    <div class="device-body">
+      <span class="eyebrow">02 — Watches · Everyday</span>
+      <h3 class="device-name" id="watch-air-name">Tester Watch <em>Air</em></h3>
+      <p class="device-tagline">Lighter on the wrist. Same signal graph.</p>
+      <p class="device-pitch">Anodized aluminum, a fluoroelastomer sport band and water-true to 50m. Thirty-two grams lighter than the Pro, with the same Tester signal stack under the hood.</p>
+      <div class="device-chips">
+        <span class="chip"><b>40mm</b> Aluminum</span>
+        <span class="chip"><b>32g</b> Lighter</span>
+        <span class="chip"><b>5-day</b> Battery</span>
+        <span class="chip"><b>50m</b> Water-true</span>
+      </div>
+      <div class="device-cta-row">
+        <a class="btn dark" href="product.html">Buy — from $399 →</a>
+        <a class="btn line-dark" href="#compare">Compare</a>
+      </div>
+      <div class="device-meta"><span>Ships Q3 '26</span><i>·</i><span>Five colors</span><i>·</i><span>CE / FCC</span></div>
+    </div>
+  </article>
+</section>
+
+<!-- ─── 02 · GLASSES ─── -->
+<section class="cat" id="glasses">
+  <div class="cat-head">
+    <span class="cat-num">02 / Category</span>
+    <h2 class="cat-name">Glasses, <em>quietly smart.</em></h2>
+    <p class="cat-lede">Two frames — one for AR overlays in the field, one for open-ear audio in the office. Acetate fronts, real hinges, computers hidden inside.</p>
+  </div>
+</section>
+
+<section class="device">
+  <article class="device-card dark" id="lens-ar" aria-labelledby="lens-ar-name">
+    <figure class="device-media">
+      <span class="badge">● Available</span>
+      <img src="media/img/tt-lens-ar.png" alt="Tester Lens AR — whole glasses and exploded view of components" loading="lazy" />
+    </figure>
+    <div class="device-body">
+      <span class="eyebrow">03 — Glasses · AR</span>
+      <h3 class="device-name" id="lens-ar-name">Tester Lens <em>AR</em></h3>
+      <p class="device-tagline">Edge-rendered overlays for hands-free debugging.</p>
+      <p class="device-pitch">Micro-OLED waveguide lenses, a 60° field of view, voice and gaze input. The dashboard you usually keep on a second monitor — on your face, in the field.</p>
+      <div class="device-chips">
+        <span class="chip"><b>Micro-OLED</b> Waveguide</span>
+        <span class="chip"><b>60°</b> FoV</span>
+        <span class="chip"><b>Voice</b> + Gaze</span>
+        <span class="chip"><b>Edge</b> Rendered</span>
+      </div>
+      <div class="device-cta-row">
+        <a class="btn primary" href="product.html">Buy — from $1,299 →</a>
+        <a class="btn ghost" href="#compare">Compare</a>
+      </div>
+      <div class="device-meta"><span>Ships Q4 '26</span><i>·</i><span>Prescription-ready</span><i>·</i><span>CE / FCC</span></div>
+    </div>
+  </article>
+</section>
+
+<section class="device">
+  <article class="device-card reverse" id="lens-audio" aria-labelledby="lens-audio-name">
+    <figure class="device-media">
+      <span class="badge">● Available</span>
+      <img src="media/img/tt-lens-audio.png" alt="Tester Lens Audio — whole glasses and exploded view of components" loading="lazy" />
+    </figure>
+    <div class="device-body">
+      <span class="eyebrow">04 — Glasses · Audio</span>
+      <h3 class="device-name" id="lens-audio-name">Tester Lens <em>Audio</em></h3>
+      <p class="device-tagline">Open-ear acetate frames.</p>
+      <p class="device-pitch">Directional micro-speakers and dual MEMS microphones tucked into tortoise-shell acetate. Tester's voice assistant follows you, conversation by conversation.</p>
+      <div class="device-chips">
+        <span class="chip"><b>Open-ear</b> Audio</span>
+        <span class="chip"><b>Dual</b> MEMS Mics</span>
+        <span class="chip"><b>Tortoise</b> Acetate</span>
+        <span class="chip"><b>9h</b> Battery</span>
+      </div>
+      <div class="device-cta-row">
+        <a class="btn dark" href="product.html">Buy — from $329 →</a>
+        <a class="btn line-dark" href="#compare">Compare</a>
+      </div>
+      <div class="device-meta"><span>Ships Q4 '26</span><i>·</i><span>Prescription-ready</span><i>·</i><span>CE / FCC</span></div>
+    </div>
+  </article>
+</section>
+
+<!-- ─── 03 · ASSISTANTS ─── -->
+<section class="cat" id="assistants">
+  <div class="cat-head">
+    <span class="cat-num">03 / Category</span>
+    <h2 class="cat-name">Assistants, <em>at room scale.</em></h2>
+    <p class="cat-lede">A voice hub for the kitchen, a display hub for the studio. Local wake-word, far-field arrays, ambient Tester.io status — never a cloud round-trip.</p>
+  </div>
+</section>
+
+<section class="device">
+  <article class="device-card" id="voice-hub" aria-labelledby="voice-hub-name">
+    <figure class="device-media">
+      <span class="badge">Coming 2026</span>
+      <img src="media/img/tt-voice-hub.png" alt="Tester Voice Hub — whole speaker and exploded view of components" loading="lazy" />
+    </figure>
+    <div class="device-body">
+      <span class="eyebrow">05 — Assistants · Voice</span>
+      <h3 class="device-name" id="voice-hub-name">Tester Voice <em>Hub</em></h3>
+      <p class="device-tagline">Always-on. Never cloud.</p>
+      <p class="device-pitch">A seven-microphone far-field array, room-aware EQ and a local wake-word model in a fabric-wrapped cylinder. The Tester.io status line you can talk to.</p>
+      <div class="device-chips">
+        <span class="chip"><b>7-mic</b> Far-field</span>
+        <span class="chip"><b>Local</b> Wake-word</span>
+        <span class="chip"><b>Zero</b> Cloud</span>
+        <span class="chip"><b>Room</b> EQ</span>
+      </div>
+      <div class="device-cta-row">
+        <a class="btn dark" href="index.html#start">Reserve — $249 →</a>
+        <a class="btn line-dark" href="#compare">Compare</a>
+      </div>
+      <div class="device-meta"><span>Ships H1 '27</span><i>·</i><span>Four fabrics</span><i>·</i><span>CE / FCC</span></div>
+    </div>
+  </article>
+</section>
+
+<section class="device">
+  <article class="device-card reverse dark" id="display-hub" aria-labelledby="display-hub-name">
+    <figure class="device-media">
+      <span class="badge">Coming 2026</span>
+      <img src="media/img/tt-display-hub.png" alt="Tester Display Hub — whole device and exploded view of components" loading="lazy" />
+    </figure>
+    <div class="device-body">
+      <span class="eyebrow">06 — Assistants · Display</span>
+      <h3 class="device-name" id="display-hub-name">Tester Display <em>Hub</em></h3>
+      <p class="device-tagline">The room-scale Tester.io dashboard.</p>
+      <p class="device-pitch">An 8" matte panel with an ambient run feed, glanceable QA, voice control, and a privacy slider that physically covers the camera. Designed to sit on the bench.</p>
+      <div class="device-chips">
+        <span class="chip"><b>8"</b> Matte Panel</span>
+        <span class="chip"><b>Ambient</b> Feed</span>
+        <span class="chip"><b>Voice</b> Control</span>
+        <span class="chip"><b>Privacy</b> Slider</span>
+      </div>
+      <div class="device-cta-row">
+        <a class="btn primary" href="index.html#start">Reserve — $429 →</a>
+        <a class="btn ghost" href="#compare">Compare</a>
+      </div>
+      <div class="device-meta"><span>Ships H1 '27</span><i>·</i><span>Two finishes</span><i>·</i><span>CE / FCC</span></div>
+    </div>
+  </article>
+</section>
+
+<!-- ─── 04 · WEARABLES ─── -->
+<section class="cat" id="wearables">
+  <div class="cat-head">
+    <span class="cat-num">04 / Category</span>
+    <h2 class="cat-name">Wearables, <em>off-wrist.</em></h2>
+    <p class="cat-lede">When the watch isn't on, the signal still is. A ceramic ring for sleep, a set of pro earbuds for everything else.</p>
+  </div>
+</section>
+
+<section class="device">
+  <article class="device-card" id="ring" aria-labelledby="ring-name">
+    <figure class="device-media">
+      <span class="badge">Coming 2026</span>
+      <img src="media/img/tt-ring.png" alt="Tester Ring — whole ring and exploded view of components" loading="lazy" />
+    </figure>
+    <div class="device-body">
+      <span class="eyebrow">07 — Wearables · Ring</span>
+      <h3 class="device-name" id="ring-name">Tester <em>Ring</em></h3>
+      <p class="device-tagline">A signal you forget you're wearing.</p>
+      <p class="device-pitch">Continuous biosignal capture in a polished ceramic shell with a titanium liner. Sized 6 to 13, five-day battery, the same data graph your team already trusts.</p>
+      <div class="device-chips">
+        <span class="chip"><b>Sizes</b> 6–13</span>
+        <span class="chip"><b>Ceramic</b> Shell</span>
+        <span class="chip"><b>5-day</b> Battery</span>
+        <span class="chip"><b>PPG</b> + Temp</span>
+      </div>
+      <div class="device-cta-row">
+        <a class="btn dark" href="index.html#start">Reserve — $299 →</a>
+        <a class="btn line-dark" href="#compare">Compare</a>
+      </div>
+      <div class="device-meta"><span>Ships H2 '27</span><i>·</i><span>Three finishes</span><i>·</i><span>CE / FCC</span></div>
+    </div>
+  </article>
+</section>
+
+<section class="device">
+  <article class="device-card reverse" id="buds-pro" aria-labelledby="buds-pro-name">
+    <figure class="device-media">
+      <span class="badge">Coming 2026</span>
+      <img src="media/img/tt-buds-pro.png" alt="Tester Buds Pro — whole earbuds with case and exploded view" loading="lazy" />
+    </figure>
+    <div class="device-body">
+      <span class="eyebrow">08 — Wearables · Earbuds</span>
+      <h3 class="device-name" id="buds-pro-name">Tester Buds <em>Pro</em></h3>
+      <p class="device-tagline">Biosignals from the ear canal, too.</p>
+      <p class="device-pitch">Dual drivers, adaptive ANC, and bone-conduction comms — plus in-canal PPG sensors that let the buds contribute their own row to your Tester signal graph.</p>
+      <div class="device-chips">
+        <span class="chip"><b>Dual</b> Drivers</span>
+        <span class="chip"><b>Adaptive</b> ANC</span>
+        <span class="chip"><b>Bone</b> Conduction</span>
+        <span class="chip"><b>In-canal</b> PPG</span>
+      </div>
+      <div class="device-cta-row">
+        <a class="btn dark" href="index.html#start">Reserve — $249 →</a>
+        <a class="btn line-dark" href="#compare">Compare</a>
+      </div>
+      <div class="device-meta"><span>Ships H2 '27</span><i>·</i><span>Two colors</span><i>·</i><span>CE / FCC</span></div>
+    </div>
+  </article>
+</section>
+
+<!-- ─── COMPARE ─── -->
+<section class="compare" id="compare">
+  <h2>The flagships, <em>side by side.</em></h2>
+  <p class="compare-lede">A quick read on the four lead devices — what they're for, how long they last, and what they cost.</p>
+  <div class="compare-grid">
+    <div class="compare-cell">
+      <span class="kc">Watches · Flagship</span>
+      <h4>Watch <em>Pro</em></h4>
+      <div class="compare-row"><span class="rk">Price</span><span class="rv">$849</span></div>
+      <div class="compare-row"><span class="rk">Battery</span><span class="rv">7 days</span></div>
+      <div class="compare-row"><span class="rk">Weight</span><span class="rv">62 g</span></div>
+      <div class="compare-row"><span class="rk">For</span><span class="rv">Pro use</span></div>
+    </div>
+    <div class="compare-cell">
+      <span class="kc">Glasses · AR</span>
+      <h4>Lens <em>AR</em></h4>
+      <div class="compare-row"><span class="rk">Price</span><span class="rv">$1,299</span></div>
+      <div class="compare-row"><span class="rk">Battery</span><span class="rv">5 hrs</span></div>
+      <div class="compare-row"><span class="rk">Weight</span><span class="rv">48 g</span></div>
+      <div class="compare-row"><span class="rk">For</span><span class="rv">In-field</span></div>
+    </div>
+    <div class="compare-cell">
+      <span class="kc">Assistants · Display</span>
+      <h4>Display <em>Hub</em></h4>
+      <div class="compare-row"><span class="rk">Price</span><span class="rv">$429</span></div>
+      <div class="compare-row"><span class="rk">Battery</span><span class="rv">Plug-in</span></div>
+      <div class="compare-row"><span class="rk">Weight</span><span class="rv">820 g</span></div>
+      <div class="compare-row"><span class="rk">For</span><span class="rv">Studio</span></div>
+    </div>
+    <div class="compare-cell">
+      <span class="kc">Wearables · Ring</span>
+      <h4>Tester <em>Ring</em></h4>
+      <div class="compare-row"><span class="rk">Price</span><span class="rv">$299</span></div>
+      <div class="compare-row"><span class="rk">Battery</span><span class="rv">5 days</span></div>
+      <div class="compare-row"><span class="rk">Weight</span><span class="rv">4 g</span></div>
+      <div class="compare-row"><span class="rk">For</span><span class="rv">Off-wrist</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CLOSING ─── -->
+<section class="closing">
+  <div class="closing-inner">
+    <h2>Designed in Berlin. <em>Tested everywhere.</em></h2>
+    <div class="right">
+      <p>Every TesterTech device is QA-tested by the same platform it ships with. Reserve one now and we'll send a tracking link from our Kreuzberg line on the day yours leaves the floor.</p>
+      <div class="actions">
+        <a class="btn primary" href="index.html#start">Reserve a device →</a>
+        <a class="btn ghost" href="mailto:sales@tester.io">Talk to sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footcol">
+    <div class="mast">
+      <div class="lock">Tester<span>.io</span></div>
+      <p>The unified QA platform for teams that ship daily. TesterTech is the hardware family that lives on the same signal graph.</p>
+    </div>
+    <div>
+      <div class="col-h">Devices</div>
+      <div class="col-list">
+        <a href="#watches">Watches</a>
+        <a href="#glasses">Glasses</a>
+        <a href="#assistants">Assistants</a>
+        <a href="#wearables">Wearables</a>
+        <a href="#compare">Compare</a>
+      </div>
+    </div>
+    <div>
+      <div class="col-h">Company</div>
+      <div class="col-list">
+        <a href="index.html">Tester.io</a>
+        <a href="product.html">Watch Pro film</a>
+        <a href="#">Careers</a>
+        <a href="#">Press</a>
+        <a href="mailto:sales@tester.io">Contact</a>
+      </div>
+    </div>
+    <div>
+      <div class="col-h">Legal &amp; Status</div>
+      <div class="col-list">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Security</a>
+        <a href="#">Status page</a>
+      </div>
+    </div>
+  </div>
+  <div class="foot-meta">
+    <span>© 2026 Tester.io · TesterTech</span>
+    <span class="live"><i></i>Kreuzberg line · 14 stations · all nominal</span>
+    <span><a href="index.html">Home</a> · <a href="product.html">Watch Pro</a> · <a href="index.html#start">Buy</a></span>
+  </div>
+</footer>
+
+</body>
+</html>

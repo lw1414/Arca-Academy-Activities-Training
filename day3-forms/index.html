@@ -3,7 +3,46 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Tester.io — Quality Assurance, automated.</title>
+<title>Tester.io — Testing that moves with your release</title>
+<meta name="description" content="The unified QA platform for engineering teams shipping at speed. End-to-end test runs, flake-adjusted reports, and code-diff–level traceability. Trusted by 1,400+ teams running 2.4M tests per week." />
+<meta name="theme-color" content="#000000" />
+<meta name="author" content="Tester.io GmbH" />
+<link rel="canonical" href="https://tester.io/" />
+
+<!-- Open Graph / social -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Tester.io" />
+<meta property="og:title" content="Tester.io — Testing that moves with your release" />
+<meta property="og:description" content="The unified QA platform for engineering teams shipping at speed. End-to-end runs, flake-adjusted reports, diff-level traceability." />
+<meta property="og:url" content="https://tester.io/" />
+<meta property="og:image" content="brand_assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Tester.io — Testing that moves with your release" />
+<meta name="twitter:description" content="QA platform for teams shipping at speed. 2.4M tests/week, 99.42% pass rate." />
+<meta name="twitter:image" content="brand_assets/og-image.png" />
+
+<!-- Favicons -->
+<link rel="icon" type="image/svg+xml" href="brand_assets/favicon.svg" />
+<link rel="icon" type="image/png" href="brand_assets/Tester Logo.png" />
+<link rel="apple-touch-icon" href="brand_assets/Tester Logo.png" />
+
+<!-- JSON-LD structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Tester.io",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Web",
+  "url": "https://tester.io/",
+  "description": "The unified QA platform for engineering teams shipping at speed.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "description": "14-day free trial" },
+  "publisher": { "@type": "Organization", "name": "Tester.io GmbH", "address": "Torstraße 142, 10119 Berlin, Germany" }
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Montserrat:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
@@ -360,6 +399,14 @@
   .blue-body .b-pill.solid{background:#fff;color:#2e62ff}
   .blue-body .b-pill.solid:hover{background:#f0f0f0}
 
+  /* Passive metadata labels (replace fake-button chips) */
+  .meta-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:14px}
+  .meta-tag{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#9a9485;font-weight:400}
+  .meta-tag.mono{font-family:var(--mono);text-transform:none;letter-spacing:0.02em;color:#8a8472;font-size:11px}
+  .meta-tag .dot-ok{display:inline-block;width:6px;height:6px;border-radius:50%;background:#5dd06a;box-shadow:0 0 8px rgba(93,208,106,0.6)}
+  .blue-body .meta-tag{color:rgba(255,255,255,0.78)}
+  .blue-body .meta-tag.mono{color:rgba(255,255,255,0.7)}
+
   /* Bento tickets */
   .tickets{
     display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:200px;gap:16px;
@@ -489,6 +536,81 @@
   .node-card .rel-btn{font-family:var(--mono);font-size:10px;padding:5px 10px;border-radius:6px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.8);cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:all .25s ease;text-transform:uppercase;letter-spacing:0.1em}
   .node-card .rel-btn:hover{border-color:var(--gold-2);color:var(--gold-2);background:rgba(230,185,121,0.08)}
 
+  /* Install + Integrations section */
+  #integrate{padding:90px var(--gutter) 90px;position:relative;z-index:2;max-width:1440px;margin:0 auto}
+  .install-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:32px;margin-top:42px}
+  @media (max-width:880px){.install-grid{grid-template-columns:1fr}}
+
+  .codeblock{border:1px solid rgba(255,255,255,0.08);border-radius:14px;background:#0a0a0a;overflow:hidden;box-shadow:0 24px 60px -30px rgba(230,185,121,0.18)}
+  .codeblock-head{display:flex;align-items:center;gap:14px;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.06);background:#080808}
+  .cb-dots{display:flex;gap:6px}
+  .cb-dots span{width:10px;height:10px;border-radius:50%;background:#2a2a2a}
+  .cb-tabs{display:flex;gap:2px;flex:1;justify-content:center}
+  .cb-tab{appearance:none;border:0;background:transparent;color:#7a7468;font-family:var(--mono);font-size:11px;letter-spacing:0.02em;padding:6px 12px;border-radius:6px;cursor:pointer;transition:color .2s,background .2s}
+  .cb-tab:hover{color:#cfc6b1}
+  .cb-tab.active{color:var(--gold-2);background:rgba(230,185,121,0.08)}
+  .cb-copy{appearance:none;border:1px solid rgba(255,255,255,0.08);background:transparent;color:#a59c83;font-family:var(--mono);font-size:11px;padding:6px 12px;border-radius:6px;cursor:pointer;transition:color .2s,border-color .2s,background .2s}
+  .cb-copy:hover{color:var(--gold-2);border-color:rgba(230,185,121,0.35);background:rgba(230,185,121,0.05)}
+  .cb-copy.copied{color:#5dd06a;border-color:rgba(93,208,106,0.4)}
+  .cb-body{margin:0;padding:22px 22px 26px;font-family:var(--mono);font-size:13.5px;line-height:1.85;color:#e6dfcc;overflow-x:auto}
+  .cb-body[hidden="true"]{display:none}
+  .cb-body code{font-family:inherit;background:transparent;padding:0}
+  .c-com{color:#5a5a5a;font-style:italic}
+  .c-cmd{color:#e6dfcc}
+  .c-key{color:var(--gold-2)}
+  .c-str{color:#a8d5b9}
+
+  .install-side{display:flex;flex-direction:column;gap:18px;align-self:start}
+  .install-step{display:flex;gap:18px;padding:18px;border:1px solid rgba(255,255,255,0.06);border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0));transition:border-color .25s,transform .25s}
+  .install-step:hover{border-color:rgba(230,185,121,0.25);transform:translateY(-2px)}
+  .install-step .step-n{font-family:var(--mono);font-size:11px;color:var(--gold-2);letter-spacing:0.1em;flex:0 0 32px;padding-top:3px}
+  .install-step h4{margin:0 0 6px;font-family:var(--serif);font-weight:500;font-size:18px;letter-spacing:-0.01em;color:var(--ink)}
+  .install-step p{margin:0;font-size:13px;line-height:1.6;color:#9a9485}
+
+  .integration-section{margin-top:64px}
+  .integration-head{display:grid;grid-template-columns:1fr 1.5fr;gap:32px;align-items:end;margin-bottom:24px}
+  @media (max-width:760px){.integration-head{grid-template-columns:1fr}}
+  .integration-title{font-family:var(--serif);font-weight:400;font-size:clamp(28px,4vw,42px);letter-spacing:-0.02em;margin:0;color:var(--ink)}
+  .integration-title::after{content:""}
+  .integration-lede{margin:0;font-size:14.5px;line-height:1.7;color:#9a9485;max-width:520px}
+  .integration-grid{display:grid;grid-template-columns:repeat(6,1fr);border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,0.015),rgba(255,255,255,0))}
+  @media (max-width:880px){.integration-grid{grid-template-columns:repeat(4,1fr)}}
+  @media (max-width:520px){.integration-grid{grid-template-columns:repeat(3,1fr)}}
+  .i-cell{padding:24px 12px;text-align:center;font-family:var(--serif);font-style:italic;font-size:15px;color:#7a7468;letter-spacing:-0.01em;border-right:1px solid rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.05);transition:color .3s,background .3s,letter-spacing .3s;cursor:default}
+  .i-cell:hover{color:var(--gold-2);background:rgba(230,185,121,0.04)}
+  .integration-grid .i-cell:nth-child(6n){border-right:0}
+  @media (max-width:880px){.integration-grid .i-cell:nth-child(6n){border-right:1px solid rgba(255,255,255,0.05)}.integration-grid .i-cell:nth-child(4n){border-right:0}}
+  @media (max-width:520px){.integration-grid .i-cell:nth-child(4n){border-right:1px solid rgba(255,255,255,0.05)}.integration-grid .i-cell:nth-child(3n){border-right:0}}
+
+  /* TesterTech footer CTA */
+  .tt-foot{margin-top:36px;display:flex;justify-content:center}
+  .tt-foot-cta{display:inline-flex;flex-direction:column;align-items:center;gap:8px;padding:22px 38px;border:1px solid rgba(230,185,121,0.25);border-radius:18px;background:linear-gradient(180deg,rgba(230,185,121,0.04),rgba(230,185,121,0));transition:border-color .25s,transform .25s,background .25s;cursor:pointer}
+  .tt-foot-cta:hover{border-color:var(--gold-2);transform:translateY(-2px);background:linear-gradient(180deg,rgba(230,185,121,0.08),rgba(230,185,121,0.02))}
+  .tt-foot-eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:0.32em;text-transform:uppercase;color:var(--gold-2)}
+  .tt-foot-line{font-family:var(--serif);font-style:italic;font-size:22px;letter-spacing:-0.02em;color:var(--ink)}
+  .tt-foot-line i{font-style:normal;color:var(--gold-2);margin-left:8px;transition:transform .25s}
+  .tt-foot-cta:hover .tt-foot-line i{transform:translateX(6px)}
+
+  /* Sights / Adventure promo */
+  .sights-promo{padding:60px var(--gutter) 40px;max-width:1440px;margin:0 auto;position:relative;z-index:2}
+  .sights-card{display:grid;grid-template-columns:1fr 1.05fr;gap:0;border:1px solid rgba(255,255,255,0.08);border-radius:24px;overflow:hidden;background:linear-gradient(135deg,rgba(20,16,10,0.6),rgba(0,0,0,0.4))}
+  @media (max-width:880px){.sights-card{grid-template-columns:1fr}}
+  .sights-left{padding:48px 44px 44px;display:flex;flex-direction:column;gap:14px;justify-content:center}
+  .sights-left .sec-num{font-family:var(--mono);font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold-2)}
+  .sights-title{font-family:var(--serif);font-weight:400;font-size:clamp(34px,4.4vw,52px);letter-spacing:-0.02em;line-height:1.05;margin:6px 0 4px;color:var(--ink)}
+  .sights-title em{font-style:italic;background:var(--gold-gradient);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sights-lede{margin:0 0 10px;font-size:15px;line-height:1.7;color:#9a9485;max-width:38ch}
+  .sights-cta{display:inline-flex;align-items:center;gap:10px;padding:13px 22px;border:1px solid rgba(230,185,121,0.4);border-radius:999px;color:var(--ink);font-size:12px;letter-spacing:0.24em;text-transform:uppercase;font-weight:500;width:fit-content;background:rgba(230,185,121,0.04);transition:transform .25s,background .25s,border-color .25s,color .25s}
+  .sights-cta:hover{transform:translateY(-1px);background:linear-gradient(135deg,var(--gold-2),var(--gold-1));color:#0c0700;border-color:transparent}
+  .sights-cta i{font-style:normal;transition:transform .25s}
+  .sights-cta:hover i{transform:translateX(4px)}
+  .sights-right{position:relative;min-height:340px;border-left:1px solid rgba(255,255,255,0.05)}
+  @media (max-width:880px){.sights-right{border-left:0;border-top:1px solid rgba(255,255,255,0.05);min-height:280px}}
+  .sights-pic{position:absolute;inset:0;background-size:cover;background-position:center;filter:grayscale(.35) contrast(1.05)}
+  .sights-pic::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,0,0) 55%,rgba(0,0,0,0.6) 100%);pointer-events:none}
+  .sights-meta{position:absolute;left:20px;right:20px;bottom:18px;display:flex;justify-content:space-between;font-size:10.5px;color:rgba(246,241,230,0.8);letter-spacing:0.04em;z-index:2}
+  .sights-meta .mono{font-family:var(--mono)}
+
   /* CTA editorial */
   .cta-section{
     padding:160px var(--gutter) 80px;
@@ -608,6 +730,7 @@
     border:1px solid rgba(255,255,255,0.1);color:#9a9388;
   }
   .product-badge.live{color:var(--gold-2);border-color:rgba(230,185,121,0.4);background:rgba(230,185,121,0.08)}
+  .product-badge.preview{color:#a59c83;border-color:rgba(165,156,131,0.4);background:rgba(165,156,131,0.06);letter-spacing:0.16em}
   .product-body{padding:24px 24px 26px;display:flex;flex-direction:column;gap:12px;flex:1}
   .product-name{
     font-family:var(--serif);font-weight:400;font-size:24px;letter-spacing:-0.02em;line-height:1.15;color:var(--ink);margin:0;
@@ -844,7 +967,7 @@
 <body>
 
 <nav class="nav">
-  <a class="brand" href="#">
+  <a class="brand" href="index.html">
     <img class="brand-logo" src="brand_assets/Tester Logo.png" alt="Tester.io logo" />
     <span class="brand-word">Tester<span class="tld">.io</span></span>
   </a>
@@ -854,8 +977,8 @@
     <li><a href="#reports">Reports</a></li>
     <li><a href="#products">Products</a></li>
     <li><a href="#pricing">Pricing</a></li>
-    <li><a href="TesterTech.html">TesterTech</a></li>
-    <li><a href="Sights.html">Adventure</a></li>
+    <li><a href="customers.html">Customers</a></li>
+    <li><a href="changelog.html">Changelog</a></li>
   </ul>
   <a class="cta" href="#start">Get Started</a>
   <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="primary-nav">
@@ -1100,9 +1223,9 @@ function submitForm(e) {
         <div class="label">Deploys shipped this quarter</div>
         <div class="num">1,<em>284</em></div>
         <div class="desc">Every merge runs the full safety net — auto-quarantine for flakes, instant bisect, and rollback-ready signals.</div>
-        <div class="controls">
-          <span class="pill dark">View pipeline</span>
-          <span class="pill line">Configure</span>
+        <div class="controls meta-row">
+          <span class="meta-tag"><i class="dot-ok"></i>main branch</span>
+          <span class="meta-tag mono">last deploy · 12 min ago</span>
         </div>
       </div>
     </div>
@@ -1155,9 +1278,9 @@ function submitForm(e) {
           <div class="b-num">$27<em>,964</em></div>
           <div class="b-sub">Cumulative reclaim across all suites this quarter — what your team got back from runs we removed.</div>
         </div>
-        <div class="b-row">
-          <span class="b-pill solid">Export</span>
-          <span class="b-pill">Schedule</span>
+        <div class="b-row meta-row">
+          <span class="meta-tag mono">reports/weekly · auto</span>
+          <span class="meta-tag mono">CSV · PDF · JSON</span>
         </div>
       </div>
     </div>
@@ -1211,7 +1334,109 @@ function submitForm(e) {
   </div>
 </section>
 
-<!-- 06 — Numbers strip -->
+<!-- Divider -->
+<div class="divider-word"><em>integrate.</em></div>
+
+<!-- 06 — Install & Integrations -->
+<section class="show" id="integrate">
+  <div class="sec-head">
+    <span class="sec-num">06 / Install &amp; Integrations</span>
+    <div>
+      <h2 class="sec-title">Fits where you <em>already work.</em></h2>
+      <p class="sec-lede">One CLI install, one config file, native integrations with the 24 tools your engineers use every day. No proxies. No SDK rewrites.</p>
+    </div>
+  </div>
+
+  <div class="install-grid reveal">
+    <div class="codeblock">
+      <div class="codeblock-head">
+        <div class="cb-dots"><span></span><span></span><span></span></div>
+        <div class="cb-tabs">
+          <button class="cb-tab active" data-tab="npm" type="button">npm</button>
+          <button class="cb-tab" data-tab="pnpm" type="button">pnpm</button>
+          <button class="cb-tab" data-tab="curl" type="button">curl</button>
+          <button class="cb-tab" data-tab="ci" type="button">CI</button>
+        </div>
+        <button class="cb-copy" data-copy aria-label="Copy snippet" type="button">Copy</button>
+      </div>
+      <pre class="cb-body" data-pane="npm" hidden="false"><code><span class="c-com"># Install the CLI</span>
+<span class="c-cmd">npm install -D @tester/cli</span>
+
+<span class="c-com"># Run your first suite — auto-detects Playwright, Cypress, or Vitest</span>
+<span class="c-cmd">npx tester run</span>
+
+<span class="c-com"># Open the dashboard for this run</span>
+<span class="c-cmd">npx tester open</span></code></pre>
+      <pre class="cb-body" data-pane="pnpm" hidden="true"><code><span class="c-com"># Install the CLI</span>
+<span class="c-cmd">pnpm add -D @tester/cli</span>
+
+<span class="c-com"># Run with smart-selection — only specs touched by your diff</span>
+<span class="c-cmd">pnpm tester run --since main</span>
+
+<span class="c-com"># Watch mode locally</span>
+<span class="c-cmd">pnpm tester watch</span></code></pre>
+      <pre class="cb-body" data-pane="curl" hidden="true"><code><span class="c-com"># One-line install — Linux / macOS / WSL</span>
+<span class="c-cmd">curl -fsSL https://get.tester.io | sh</span>
+
+<span class="c-com"># Authenticate this machine</span>
+<span class="c-cmd">tester auth login</span>
+
+<span class="c-com"># First run</span>
+<span class="c-cmd">tester run --project myapp</span></code></pre>
+      <pre class="cb-body" data-pane="ci" hidden="true"><code><span class="c-com"># .github/workflows/test.yml</span>
+<span class="c-key">name:</span> <span class="c-str">Tests</span>
+<span class="c-key">on:</span> [<span class="c-str">push</span>, <span class="c-str">pull_request</span>]
+<span class="c-key">jobs:</span>
+  <span class="c-key">tester:</span>
+    <span class="c-key">runs-on:</span> <span class="c-str">ubuntu-latest</span>
+    <span class="c-key">steps:</span>
+      - <span class="c-key">uses:</span> <span class="c-str">tester-io/action@v2</span>
+        <span class="c-key">with:</span>
+          <span class="c-key">token:</span> <span class="c-str">${{ secrets.TESTER_TOKEN }}</span></code></pre>
+    </div>
+
+    <div class="install-side">
+      <div class="install-step"><span class="step-n">01</span><div><h4>Install</h4><p>One CLI. Detects your test runner, picks up your existing config. No new SDKs.</p></div></div>
+      <div class="install-step"><span class="step-n">02</span><div><h4>Connect</h4><p>Authenticate once. The CLI uploads traces, screenshots, and metadata after each run.</p></div></div>
+      <div class="install-step"><span class="step-n">03</span><div><h4>Ship</h4><p>PR comments, Slack notifications, and dashboard reports update automatically.</p></div></div>
+    </div>
+  </div>
+
+  <div class="integration-section reveal">
+    <div class="integration-head">
+      <h3 class="integration-title">24 native integrations.</h3>
+      <p class="integration-lede">Source control, CI, observability, on-call, chat. Drop into the tools your team already uses — no proxies, no scrapers.</p>
+    </div>
+    <div class="integration-grid">
+      <div class="i-cell" title="GitHub">GitHub</div>
+      <div class="i-cell" title="GitLab">GitLab</div>
+      <div class="i-cell" title="Bitbucket">Bitbucket</div>
+      <div class="i-cell" title="Azure DevOps">Azure DevOps</div>
+      <div class="i-cell" title="CircleCI">CircleCI</div>
+      <div class="i-cell" title="GitHub Actions">GH Actions</div>
+      <div class="i-cell" title="Jenkins">Jenkins</div>
+      <div class="i-cell" title="Buildkite">Buildkite</div>
+      <div class="i-cell" title="Slack">Slack</div>
+      <div class="i-cell" title="Microsoft Teams">MS Teams</div>
+      <div class="i-cell" title="Discord">Discord</div>
+      <div class="i-cell" title="Linear">Linear</div>
+      <div class="i-cell" title="Jira">Jira</div>
+      <div class="i-cell" title="PagerDuty">PagerDuty</div>
+      <div class="i-cell" title="Opsgenie">Opsgenie</div>
+      <div class="i-cell" title="Datadog">Datadog</div>
+      <div class="i-cell" title="Grafana">Grafana</div>
+      <div class="i-cell" title="Honeycomb">Honeycomb</div>
+      <div class="i-cell" title="Sentry">Sentry</div>
+      <div class="i-cell" title="Vercel">Vercel</div>
+      <div class="i-cell" title="Netlify">Netlify</div>
+      <div class="i-cell" title="AWS">AWS</div>
+      <div class="i-cell" title="Cloudflare">Cloudflare</div>
+      <div class="i-cell" title="Webhooks">Webhooks</div>
+    </div>
+  </div>
+</section>
+
+<!-- 07 — Numbers strip -->
 <section class="show" id="pricing">
   <div class="sec-head">
     <span class="sec-num">06 / Numbers</span>
@@ -1283,15 +1508,14 @@ function submitForm(e) {
         </div>
         <div class="product-cta-row">
           <a class="product-cta" href="product.html">View product →</a>
-          <a class="product-cta alt" href="TesterTech.html">TesterTech →</a>
         </div>
       </div>
     </article>
 
     <article class="product-card coming">
       <div class="product-media">
-        <span class="product-badge">Coming 2026</span>
-        <img src="https://placehold.co/600x400/0a0a0a/7a7468?text=Tester+Ring" alt="Tester Ring — coming 2026" />
+        <span class="product-badge preview">Preview · Q4 2026</span>
+        <img src="https://placehold.co/600x400/0a0a0a/7a7468?text=Tester+Ring" alt="Tester Ring — preview Q4 2026" />
       </div>
       <div class="product-body">
         <h3 class="product-name">Tester <em>Ring</em></h3>
@@ -1299,14 +1523,14 @@ function submitForm(e) {
         <div class="product-specs">
           <span>Size 6–13</span><i>·</i><span>Ceramic</span><i>·</i><span>5-day battery</span>
         </div>
-        <span class="product-cta disabled">In development</span>
+        <a class="product-cta alt" href="contact.html?ref=tester-ring">Join early access →</a>
       </div>
     </article>
 
     <article class="product-card coming">
       <div class="product-media">
-        <span class="product-badge">Coming 2026</span>
-        <img src="https://placehold.co/600x400/0a0a0a/7a7468?text=Tester+Hub" alt="Tester Hub — coming 2026" />
+        <span class="product-badge preview">Preview · Q4 2026</span>
+        <img src="https://placehold.co/600x400/0a0a0a/7a7468?text=Tester+Hub" alt="Tester Hub — preview Q4 2026" />
       </div>
       <div class="product-body">
         <h3 class="product-name">Tester <em>Hub</em></h3>
@@ -1314,7 +1538,7 @@ function submitForm(e) {
         <div class="product-specs">
           <span>Edge runtime</span><i>·</i><span>USB-C</span><i>·</i><span>PoE-ready</span>
         </div>
-        <span class="product-cta disabled">In development</span>
+        <a class="product-cta alt" href="contact.html?ref=tester-hub">Join early access →</a>
       </div>
     </article>
   </div>
@@ -1414,6 +1638,37 @@ function submitForm(e) {
       <div class="tag"><b>Wearables</b>· Earbuds</div>
     </div>
   </div>
+
+  <div class="tt-foot reveal">
+    <a class="tt-foot-cta" href="TesterTech.html">
+      <span class="tt-foot-eyebrow">TesterTech</span>
+      <span class="tt-foot-line">Browse the full lineup <i>→</i></span>
+    </a>
+  </div>
+</section>
+
+<!-- Divider -->
+<div class="divider-word right"><em>field notes.</em></div>
+
+<!-- Sights / Adventure -->
+<section class="show sights-promo" id="sights">
+  <div class="sights-card reveal">
+    <div class="sights-left">
+      <span class="sec-num">— Field notes</span>
+      <h2 class="sights-title">Where we <em>test in the wild.</em></h2>
+      <p class="sights-lede">An ongoing photo journal — sights, places, and the kit we carry. The Tester team takes the platform on the road and reports back.</p>
+      <a class="sights-cta" href="Sights.html">
+        <span>Open the field journal</span><i>→</i>
+      </a>
+    </div>
+    <div class="sights-right" aria-hidden="true">
+      <div class="sights-pic" style="background-image:linear-gradient(180deg,rgba(0,0,0,0.05),rgba(0,0,0,0.45)),url('https://placehold.co/640x460/0e0d0a/E6B979?text=Sights')"></div>
+      <div class="sights-meta">
+        <span class="mono">2026 · roll 04 · 36 frames</span>
+        <span class="mono">Berlin · Lisbon · Hokkaido</span>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- CTA -->
@@ -1422,7 +1677,7 @@ function submitForm(e) {
   <div class="right">
     <span class="ck">Get started — 14 days, on us</span>
     <p>Drop your work email. We'll send a sandbox keyed to your repo and a white-glove migration playbook for Cypress, Playwright, or Selenium.</p>
-    <form class="cta-form" onsubmit="event.preventDefault()">
+    <form class="cta-form" onsubmit="event.preventDefault();var v=this.querySelector('input').value;var c=document.getElementById('contact');if(c){c.scrollIntoView({behavior:'smooth'});var ef=document.getElementById('cf-email');if(ef&&v){ef.value=v;ef.focus()}}">
       <input type="email" placeholder="you@company.com" aria-label="Work email"/>
       <button type="submit">Get Started</button>
     </form>
@@ -1438,15 +1693,15 @@ function submitForm(e) {
   </div>
   <div>
     <div class="col-h">Product</div>
-    <div class="col-list"><a href="#">Platform</a><a href="#">Workflow</a><a href="#">Reports</a><a href="#">Pricing</a><a href="#">Changelog</a></div>
+    <div class="col-list"><a href="index.html#platform">Platform</a><a href="index.html#workflow">Workflow</a><a href="index.html#reports">Reports</a><a href="index.html#pricing">Pricing</a><a href="changelog.html">Changelog</a></div>
   </div>
   <div>
     <div class="col-h">Company</div>
-    <div class="col-list"><a href="#">Manifesto</a><a href="#">Careers</a><a href="#">Customers</a><a href="#">Press</a><a href="#">Contact</a></div>
+    <div class="col-list"><a href="manifesto.html">Manifesto</a><a href="careers.html">Careers</a><a href="customers.html">Customers</a><a href="press.html">Press</a><a href="contact.html">Contact</a></div>
   </div>
   <div>
     <div class="col-h">Legal &amp; Status</div>
-    <div class="col-list"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Security</a><a href="#">DPA</a><a href="#">Status page</a></div>
+    <div class="col-list"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="security.html">Security</a><a href="dpa.html">DPA</a><a href="status.html">Status page</a></div>
   </div>
 </div>
 
@@ -1458,7 +1713,7 @@ function submitForm(e) {
   <div class="footer-meta">
     <span>© 2026 Tester.io</span>
     <span class="live"><i></i>Built in Berlin · v2.4.0 · All systems nominal</span>
-    <span><a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">Status</a></span>
+    <span><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="status.html">Status</a></span>
   </div>
 </footer>
 
@@ -1474,6 +1729,28 @@ function submitForm(e) {
     docRoot.style.setProperty('--hero-blur', (t*5).toFixed(2)+'px');
   }
   window.addEventListener('scroll', onScroll, {passive:true});
+
+  // Code-block tab switcher + copy-to-clipboard
+  (function(){
+    const cb = document.querySelector('.codeblock'); if (!cb) return;
+    const tabs = cb.querySelectorAll('.cb-tab');
+    const panes = cb.querySelectorAll('.cb-body');
+    tabs.forEach(t => t.addEventListener('click', () => {
+      tabs.forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      const want = t.dataset.tab;
+      panes.forEach(p => p.setAttribute('hidden', p.dataset.pane === want ? 'false' : 'true'));
+    }));
+    const copyBtn = cb.querySelector('[data-copy]');
+    if (copyBtn) copyBtn.addEventListener('click', async () => {
+      const visible = [...panes].find(p => p.getAttribute('hidden') === 'false');
+      const text = (visible?.innerText || '').trim();
+      try { await navigator.clipboard.writeText(text); } catch {}
+      copyBtn.classList.add('copied');
+      copyBtn.textContent = 'Copied';
+      setTimeout(() => { copyBtn.classList.remove('copied'); copyBtn.textContent = 'Copy'; }, 1500);
+    });
+  })();
 
   // Wordmark parallax on mouse-move
   (function(){

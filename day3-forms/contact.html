@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Contact — Tester.io</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Montserrat:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/subpage.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a class="brand" href="index.html"><img class="brand-logo" src="brand_assets/Tester Logo.png" alt="Tester.io logo" /><span class="brand-word">Tester<span class="tld">.io</span></span></a>
+  <ul id="primary-nav">
+    <li><a href="index.html#platform">Platform</a></li>
+    <li><a href="index.html#workflow">Workflow</a></li>
+    <li><a href="index.html#reports">Reports</a></li>
+    <li><a href="index.html#products">Products</a></li>
+    <li><a href="index.html#pricing">Pricing</a></li>
+    <li><a href="TesterTech.html">TesterTech</a></li>
+    <li><a href="Sights.html">Adventure</a></li>
+  </ul>
+  <a class="cta" href="contact.html">Get Started</a>
+  <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
+</nav>
+
+<main class="page">
+  <div class="crumbs"><a href="index.html">Home</a><span>/</span><span>Contact</span></div>
+  <h1 class="title">Start a <em>conversation.</em></h1>
+  <p class="lede">Tell us what you're shipping and what's getting in the way. We'll route you to a human within one business day.</p>
+
+  <div class="grid cols-2">
+    <div>
+      <h2>Drop us a <em>line</em></h2>
+      <form class="form" id="contact-form" onsubmit="submitForm(event)">
+        <div><label for="cf-name">Name</label><input id="cf-name" type="text" name="name" autocomplete="name" placeholder="Your full name" required maxlength="120"></div>
+        <div><label for="cf-email">Work email</label><input id="cf-email" type="email" name="email" autocomplete="email" placeholder="you@company.com" required maxlength="200"></div>
+        <div><label for="cf-message">Message</label><textarea id="cf-message" name="message" rows="5" placeholder="Tell us a little about your project…" required maxlength="2000"></textarea></div>
+        <button type="submit" class="submit"><span class="lbl">Send message →</span></button>
+      </form>
+    </div>
+    <div>
+      <h2>Direct <em>routes</em></h2>
+      <div class="card" style="margin-bottom:14px"><div class="eyebrow">Sales</div><h3>sales@tester.io</h3><p>Pricing, demos, procurement, security reviews.</p></div>
+      <div class="card" style="margin-bottom:14px"><div class="eyebrow">Support</div><h3>help@tester.io</h3><p>Existing customers — we reply within four working hours.</p></div>
+      <div class="card" style="margin-bottom:14px"><div class="eyebrow">Press</div><h3>press@tester.io</h3><p>Interviews, brand assets, embargoed pre-briefings.</p></div>
+      <div class="card"><div class="eyebrow">HQ — Berlin</div><h3>Torstraße 142</h3><p>10119 Berlin, Germany · Office hours 09:00–18:00 CET</p></div>
+    </div>
+  </div>
+</main>
+
+<div class="colophon">
+  <div class="mast"><div class="lock">Tester<span>.io</span></div><p>The unified QA platform for teams that ship daily. Built with care in Berlin, run from everywhere.</p></div>
+  <div><div class="col-h">Product</div><div class="col-list"><a href="index.html#platform">Platform</a><a href="index.html#workflow">Workflow</a><a href="index.html#reports">Reports</a><a href="index.html#pricing">Pricing</a><a href="changelog.html">Changelog</a></div></div>
+  <div><div class="col-h">Company</div><div class="col-list"><a href="manifesto.html">Manifesto</a><a href="careers.html">Careers</a><a href="customers.html">Customers</a><a href="press.html">Press</a><a href="contact.html">Contact</a></div></div>
+  <div><div class="col-h">Legal &amp; Status</div><div class="col-list"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="security.html">Security</a><a href="dpa.html">DPA</a><a href="status.html">Status page</a></div></div>
+</div>
+<div class="footer-meta">
+  <span>© 2026 Tester.io</span>
+  <span class="live"><i></i>Built in Berlin · v2.4.0 · All systems nominal</span>
+  <span><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="status.html">Status</a></span>
+</div>
+
+<script>
+  (function(){const nav=document.querySelector('.nav');const btn=document.querySelector('.nav-toggle');if(!nav||!btn)return;const close=()=>{nav.classList.remove('open');btn.setAttribute('aria-expanded','false')};btn.addEventListener('click',()=>{const open=nav.classList.toggle('open');btn.setAttribute('aria-expanded',open?'true':'false');});document.addEventListener('click',(e)=>{if(nav.classList.contains('open')&&!nav.contains(e.target))close()});nav.querySelectorAll('ul a').forEach(a=>a.addEventListener('click',close));window.addEventListener('resize',()=>{if(window.innerWidth>780)close()});})();
+
+  var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwrrcAZD8EzcqAixg37bvOhG9n2JZShq6mDDCsyT_ksUh9PddvViRMQM9ECB3qwiVKo/exec';
+  var SUPABASE_URL = 'https://ejdarjipxnruwxoaimgs.supabase.co';
+  var SUPABASE_ANON_KEY = 'sb_publishable_6jQeujqdEwvh5vfeCMPLSw_JXFc-G7e';
+
+  function submitForm(e){
+    e.preventDefault();
+    var f=e.target,btn=f.querySelector('button[type="submit"]'),lbl=btn&&btn.querySelector('.lbl');
+    if(btn){btn.disabled=true}if(lbl){lbl.textContent='Sending…'}
+    var payload={name:f.name.value,email:f.email.value,message:f.message.value};
+    var sheets=fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    var supabase=fetch(SUPABASE_URL+'/functions/v1/submit',{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY},body:JSON.stringify(payload)}).then(function(r){if(!r.ok){return r.text().then(function(t){throw new Error('Supabase '+r.status+': '+t)})}});
+    Promise.allSettled([sheets,supabase]).then(function(results){var s=results[1];if(s.status==='rejected'){console.error(s.reason)}window.location.href='thank-you.html'});
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Changelog — Tester.io</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Montserrat:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/subpage.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a class="brand" href="index.html"><img class="brand-logo" src="brand_assets/Tester Logo.png" alt="Tester.io logo" /><span class="brand-word">Tester<span class="tld">.io</span></span></a>
+  <ul id="primary-nav">
+    <li><a href="index.html#platform">Platform</a></li><li><a href="index.html#workflow">Workflow</a></li><li><a href="index.html#reports">Reports</a></li><li><a href="index.html#products">Products</a></li><li><a href="index.html#pricing">Pricing</a></li><li><a href="TesterTech.html">TesterTech</a></li><li><a href="Sights.html">Adventure</a></li>
+  </ul>
+  <a class="cta" href="contact.html">Get Started</a>
+  <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
+</nav>
+
+<main class="page">
+  <div class="crumbs"><a href="index.html">Home</a><span>/</span><span>Changelog</span></div>
+  <h1 class="title">Release <em>notes.</em></h1>
+  <p class="lede">Everything that shipped, dated and signed. We push small, often, and in public.</p>
+
+  <div class="changelog">
+    <div class="entry">
+      <div class="meta"><span class="ver">v2.4.0</span>May 28, 2026</div>
+      <h3>Adaptive flake-quarantine</h3>
+      <ul><li>Tests flagged as flaky on three consecutive runs are auto-quarantined and routed to a triage queue.</li><li>New <em>quarantine budget</em> setting per project — alerts when the budget is exceeded.</li><li>Slack/Teams notifications now include the suspected diff range.</li></ul>
+    </div>
+    <div class="entry">
+      <div class="meta"><span class="ver">v2.3.1</span>May 14, 2026</div>
+      <h3>Faster trace upload on Windows runners</h3>
+      <ul><li>Trace compression now happens in-process instead of via subprocess — 38% faster on average for Windows self-hosted runners.</li><li>Fixed a regression where retried tests were missing video on certain browser configurations.</li></ul>
+    </div>
+    <div class="entry">
+      <div class="meta"><span class="ver">v2.3.0</span>April 30, 2026</div>
+      <h3>Visual diff thresholds</h3>
+      <ul><li>Per-test perceptual diff thresholds (defaults to 0.2).</li><li>New "ignore region" syntax for masking dynamic UI.</li><li>Beta: AI-assisted baseline regeneration with one-click approve.</li></ul>
+    </div>
+    <div class="entry">
+      <div class="meta"><span class="ver">v2.2.0</span>April 9, 2026</div>
+      <h3>Multi-workspace billing</h3>
+      <ul><li>Agencies and consultancies can now manage many client workspaces under one billing entity.</li><li>Per-workspace seat allocation and usage caps.</li></ul>
+    </div>
+    <div class="entry">
+      <div class="meta"><span class="ver">v2.1.0</span>March 18, 2026</div>
+      <h3>Native GitHub Checks integration</h3>
+      <ul><li>Tester.io now posts a single Check per PR with sub-runs per browser/viewport.</li><li>Required-checks now fail fast on the first regression.</li></ul>
+    </div>
+    <div class="entry">
+      <div class="meta"><span class="ver">v2.0.0</span>February 4, 2026</div>
+      <h3>The grand re-shape</h3>
+      <ul><li>Rewrote the runner core in Rust for a 2.4× throughput improvement on parallel suites.</li><li>New dashboard with cohort-level flake analytics.</li><li>Migration guide and codemod for v1 suites available.</li></ul>
+    </div>
+  </div>
+</main>
+
+<div class="colophon">
+  <div class="mast"><div class="lock">Tester<span>.io</span></div><p>The unified QA platform for teams that ship daily. Built with care in Berlin, run from everywhere.</p></div>
+  <div><div class="col-h">Product</div><div class="col-list"><a href="index.html#platform">Platform</a><a href="index.html#workflow">Workflow</a><a href="index.html#reports">Reports</a><a href="index.html#pricing">Pricing</a><a href="changelog.html">Changelog</a></div></div>
+  <div><div class="col-h">Company</div><div class="col-list"><a href="manifesto.html">Manifesto</a><a href="careers.html">Careers</a><a href="customers.html">Customers</a><a href="press.html">Press</a><a href="contact.html">Contact</a></div></div>
+  <div><div class="col-h">Legal &amp; Status</div><div class="col-list"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="security.html">Security</a><a href="dpa.html">DPA</a><a href="status.html">Status page</a></div></div>
+</div>
+<div class="footer-meta"><span>© 2026 Tester.io</span><span class="live"><i></i>Built in Berlin · v2.4.0 · All systems nominal</span><span><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="status.html">Status</a></span></div>
+
+<script>(function(){const nav=document.querySelector('.nav'),btn=document.querySelector('.nav-toggle');if(!nav||!btn)return;const close=()=>{nav.classList.remove('open');btn.setAttribute('aria-expanded','false')};btn.addEventListener('click',()=>{const open=nav.classList.toggle('open');btn.setAttribute('aria-expanded',open?'true':'false')});document.addEventListener('click',e=>{if(nav.classList.contains('open')&&!nav.contains(e.target))close()});nav.querySelectorAll('ul a').forEach(a=>a.addEventListener('click',close));window.addEventListener('resize',()=>{if(window.innerWidth>780)close()})})();</script>
+</body>
+</html>

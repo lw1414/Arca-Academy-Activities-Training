@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Security — Tester.io</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Montserrat:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/subpage.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a class="brand" href="index.html"><img class="brand-logo" src="brand_assets/Tester Logo.png" alt="Tester.io logo" /><span class="brand-word">Tester<span class="tld">.io</span></span></a>
+  <ul id="primary-nav"><li><a href="index.html#platform">Platform</a></li><li><a href="index.html#workflow">Workflow</a></li><li><a href="index.html#reports">Reports</a></li><li><a href="index.html#products">Products</a></li><li><a href="index.html#pricing">Pricing</a></li><li><a href="TesterTech.html">TesterTech</a></li><li><a href="Sights.html">Adventure</a></li></ul>
+  <a class="cta" href="contact.html">Get Started</a>
+  <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
+</nav>
+
+<main class="page">
+  <div class="crumbs"><a href="index.html">Home</a><span>/</span><span>Legal</span><span>/</span><span>Security</span></div>
+  <h1 class="title">Security <em>practices.</em></h1>
+  <p class="lede">Customer trust is the only product. Our security program is built around that fact — verified continuously, not just at audit time.</p>
+
+  <h2>Certifications &amp; <em>attestations</em></h2>
+  <div class="grid cols-3">
+    <div class="card"><div class="eyebrow">In production</div><h3>SOC 2 Type II</h3><p>Annual audit by an independent CPA firm. Most recent report covers May 2025 – April 2026. Available under NDA.</p></div>
+    <div class="card"><div class="eyebrow">In production</div><h3>ISO 27001:2022</h3><p>Information security management. Certificate available on request.</p></div>
+    <div class="card"><div class="eyebrow">In production</div><h3>GDPR &amp; UK GDPR</h3><p>Including SCCs for cross-border transfers and a published Data Processing Addendum.</p></div>
+    <div class="card"><div class="eyebrow">In progress</div><h3>HIPAA</h3><p>BAA available on Enterprise. Independent assessment targeted Q3 2026.</p></div>
+    <div class="card"><div class="eyebrow">In progress</div><h3>FedRAMP Moderate</h3><p>3PAO assessment underway. Authorization targeted Q1 2027.</p></div>
+    <div class="card"><div class="eyebrow">Continuous</div><h3>Pen-tests</h3><p>Twice-yearly external penetration tests by Cure53. Summary reports shared with Enterprise on request.</p></div>
+  </div>
+
+  <h2>How we <em>build</em> the platform</h2>
+  <ul class="bullets">
+    <li><strong>SSO &amp; SAML</strong> on every paid tier — Okta, Azure AD, Google, JumpCloud, custom OIDC.</li>
+    <li><strong>SCIM provisioning</strong> for automated user/group lifecycle.</li>
+    <li><strong>Audit logs</strong> exported to S3, GCS, or Splunk. Immutable, signed, 7-year retention available.</li>
+    <li><strong>Role-based access control</strong> with least-privilege defaults and per-workspace policies.</li>
+    <li><strong>Encryption</strong>: TLS 1.3 in transit, AES-256-GCM at rest. Customer-managed keys (KMS) on Enterprise.</li>
+    <li><strong>Network</strong>: IP allowlisting, VPC peering, and private-link options for enterprise customers.</li>
+    <li><strong>Secret scanning</strong>: every PR runs through a hardened secret-detection pipeline before merge.</li>
+    <li><strong>Dependency hygiene</strong>: SBOM published per release; CVE alerts triaged within 24 hours.</li>
+  </ul>
+
+  <h2>How we <em>run</em> the platform</h2>
+  <ul class="bullets">
+    <li>Hosted on AWS in EU (Frankfurt) and US (Virginia). Customer data stays in your chosen region.</li>
+    <li>All production access is just-in-time, MFA-required, and logged with session recording.</li>
+    <li>Quarterly disaster-recovery drills with documented RPO &lt; 5 minutes, RTO &lt; 1 hour.</li>
+    <li>Vendor risk assessment for every sub-processor; the list is in our <a class="inline" href="dpa.html">DPA</a>.</li>
+    <li>Background checks and security training for every employee with production access, refreshed annually.</li>
+  </ul>
+
+  <h2>Responsible disclosure</h2>
+  <p>If you believe you've found a security vulnerability, please email <a class="inline" href="contact.html">security@tester.io</a> with reproduction steps. Our PGP key is published at <span style="font-family:var(--mono);color:var(--gold-2)">/.well-known/security.txt</span>. We acknowledge within 24 hours, triage within 72, and pay bounties through HackerOne ranging from $250 to $25,000 depending on impact.</p>
+
+  <p style="margin-top:32px;font-size:13px;color:var(--muted)">Want our SOC 2 report, pen-test summary, or vendor security questionnaire? <a class="inline" href="contact.html">Email security@tester.io</a> — typical turnaround is one business day under NDA.</p>
+</main>
+
+<div class="colophon">
+  <div class="mast"><div class="lock">Tester<span>.io</span></div><p>The unified QA platform for teams that ship daily. Built with care in Berlin, run from everywhere.</p></div>
+  <div><div class="col-h">Product</div><div class="col-list"><a href="index.html#platform">Platform</a><a href="index.html#workflow">Workflow</a><a href="index.html#reports">Reports</a><a href="index.html#pricing">Pricing</a><a href="changelog.html">Changelog</a></div></div>
+  <div><div class="col-h">Company</div><div class="col-list"><a href="manifesto.html">Manifesto</a><a href="careers.html">Careers</a><a href="customers.html">Customers</a><a href="press.html">Press</a><a href="contact.html">Contact</a></div></div>
+  <div><div class="col-h">Legal &amp; Status</div><div class="col-list"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="security.html">Security</a><a href="dpa.html">DPA</a><a href="status.html">Status page</a></div></div>
+</div>
+<div class="footer-meta"><span>© 2026 Tester.io</span><span class="live"><i></i>Built in Berlin · v2.4.0 · All systems nominal</span><span><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="status.html">Status</a></span></div>
+
+<script>(function(){const nav=document.querySelector('.nav'),btn=document.querySelector('.nav-toggle');if(!nav||!btn)return;const close=()=>{nav.classList.remove('open');btn.setAttribute('aria-expanded','false')};btn.addEventListener('click',()=>{const open=nav.classList.toggle('open');btn.setAttribute('aria-expanded',open?'true':'false')});document.addEventListener('click',e=>{if(nav.classList.contains('open')&&!nav.contains(e.target))close()});nav.querySelectorAll('ul a').forEach(a=>a.addEventListener('click',close));window.addEventListener('resize',()=>{if(window.innerWidth>780)close()})})();</script>
+</body>
+</html>

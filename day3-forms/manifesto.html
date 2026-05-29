@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Manifesto — Tester.io</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Montserrat:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/subpage.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a class="brand" href="index.html"><img class="brand-logo" src="brand_assets/Tester Logo.png" alt="Tester.io logo" /><span class="brand-word">Tester<span class="tld">.io</span></span></a>
+  <ul id="primary-nav"><li><a href="index.html#platform">Platform</a></li><li><a href="index.html#workflow">Workflow</a></li><li><a href="index.html#reports">Reports</a></li><li><a href="index.html#products">Products</a></li><li><a href="index.html#pricing">Pricing</a></li><li><a href="TesterTech.html">TesterTech</a></li><li><a href="Sights.html">Adventure</a></li></ul>
+  <a class="cta" href="contact.html">Get Started</a>
+  <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
+</nav>
+
+<main class="page">
+  <div class="crumbs"><a href="index.html">Home</a><span>/</span><span>Manifesto</span></div>
+  <h1 class="title">Tests are not the <em>chore.</em></h1>
+  <p class="lede">They are the contract — between the engineer who wrote it and the engineer who will read it at 2 a.m. when something breaks.</p>
+
+  <h2>What we <em>believe</em></h2>
+  <p>Software quality is not a department. It is not a checkbox at the end of a Jira ticket. It is the substance of the thing itself — and when a team treats QA as an afterthought, the product becomes one too.</p>
+  <p>We started Tester.io because the tools we'd been handed treated tests as a cost to minimize. Run them less. Cache them harder. Skip the ones that flake. The result was predictable: a slow erosion of trust, until nobody believed the green checkmark anymore.</p>
+
+  <h2>Our <em>principles</em></h2>
+  <ol class="bullets">
+    <li><strong>Speed is a feature, not a tradeoff.</strong> A test suite that takes 40 minutes will be disabled, then deleted. We optimize relentlessly for fast feedback.</li>
+    <li><strong>Flake is a bug.</strong> A flaky test isn't telling you the network is weird — it's telling you something about your code, your test, or your environment is wrong. We help you find which.</li>
+    <li><strong>Honest signals.</strong> No vanity dashboards. No "97% pass rate" when 6 of the 200 failures are critical. We surface what matters, in the place it matters.</li>
+    <li><strong>Author once, run everywhere.</strong> Browsers shouldn't fragment your test suite. Neither should mobile.</li>
+    <li><strong>Open by default.</strong> Your test data is yours. Your spec files are portable. There is an export button on every page.</li>
+  </ol>
+
+  <h2>How we <em>work</em></h2>
+  <p>We're 38 people in eight countries. We ship continuously and dogfood our own platform — every PR to Tester.io is gated by ~14,000 Tester.io tests. We document loudly and write changelogs like we'd want to read them.</p>
+  <p>If any of this resonates, <a class="inline" href="careers.html">we'd love to hear from you</a>.</p>
+</main>
+
+<div class="colophon">
+  <div class="mast"><div class="lock">Tester<span>.io</span></div><p>The unified QA platform for teams that ship daily. Built with care in Berlin, run from everywhere.</p></div>
+  <div><div class="col-h">Product</div><div class="col-list"><a href="index.html#platform">Platform</a><a href="index.html#workflow">Workflow</a><a href="index.html#reports">Reports</a><a href="index.html#pricing">Pricing</a><a href="changelog.html">Changelog</a></div></div>
+  <div><div class="col-h">Company</div><div class="col-list"><a href="manifesto.html">Manifesto</a><a href="careers.html">Careers</a><a href="customers.html">Customers</a><a href="press.html">Press</a><a href="contact.html">Contact</a></div></div>
+  <div><div class="col-h">Legal &amp; Status</div><div class="col-list"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="security.html">Security</a><a href="dpa.html">DPA</a><a href="status.html">Status page</a></div></div>
+</div>
+<div class="footer-meta"><span>© 2026 Tester.io</span><span class="live"><i></i>Built in Berlin · v2.4.0 · All systems nominal</span><span><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="status.html">Status</a></span></div>
+
+<script>(function(){const nav=document.querySelector('.nav'),btn=document.querySelector('.nav-toggle');if(!nav||!btn)return;const close=()=>{nav.classList.remove('open');btn.setAttribute('aria-expanded','false')};btn.addEventListener('click',()=>{const open=nav.classList.toggle('open');btn.setAttribute('aria-expanded',open?'true':'false')});document.addEventListener('click',e=>{if(nav.classList.contains('open')&&!nav.contains(e.target))close()});nav.querySelectorAll('ul a').forEach(a=>a.addEventListener('click',close));window.addEventListener('resize',()=>{if(window.innerWidth>780)close()})})();</script>
+</body>
+</html>

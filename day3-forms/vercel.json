@@ -1,0 +1,18 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": null,
+  "outputDirectory": ".",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "functions": {
+    "api/briefing.mjs": {
+      "maxDuration": 30
+    }
+  },
+  "crons": [
+    {
+      "path": "/api/briefing",
+      "schedule": "0 23 * * *"
+    }
+  ]
+}

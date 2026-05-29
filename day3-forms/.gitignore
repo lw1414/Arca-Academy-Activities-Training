@@ -1,5 +1,9 @@
 node_modules/
 temporary screenshots/
+briefing/preview.html
+test-results/
+playwright-report/
+.vscode/
 .DS_Store
 Thumbs.db
 *.log
