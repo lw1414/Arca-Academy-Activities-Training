@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Tester.io — Commands Reference</title>
+<style>
+  @page { size: A4; margin: 18mm 14mm; }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:#fffaf0;color:#1a1a1a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,system-ui,sans-serif;font-size:10.5pt;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .cover{padding:18mm 12mm 10mm;background:linear-gradient(180deg,#000 0%,#1a1208 100%);color:#f6f1e6;page-break-after:always;height:calc(100vh - 0mm);position:relative}
+  .cover .eyebrow{font-family:'JetBrains Mono',ui-monospace,Consolas,monospace;font-size:9pt;letter-spacing:0.28em;text-transform:uppercase;color:#E6B979}
+  .cover h1{font-family:Georgia,'Times New Roman',serif;font-weight:400;font-size:46pt;line-height:1.05;letter-spacing:-0.02em;margin:14pt 0 8pt;color:#f6f1e6}
+  .cover h1 em{font-style:italic;color:#E6B979}
+  .cover .sub{font-family:Georgia,serif;font-size:14pt;color:#a59c83;font-style:italic;margin-bottom:34pt}
+  .cover .meta{font-family:'JetBrains Mono',monospace;font-size:9pt;color:#8a8472;border-top:1px solid rgba(230,185,121,0.25);padding-top:14pt;display:flex;justify-content:space-between}
+
+  main{padding:0 2mm}
+  h2{font-family:Georgia,serif;font-weight:400;font-size:18pt;letter-spacing:-0.01em;color:#1a1a1a;margin:18pt 0 6pt;padding-bottom:4pt;border-bottom:1px solid #d7cda8;page-break-after:avoid}
+  h2 em{color:#8a6f33;font-style:italic}
+  h2 .ico{font-family:'JetBrains Mono',monospace;font-size:10pt;color:#8a6f33;margin-right:8pt}
+  h3{font-family:Georgia,serif;font-weight:500;font-size:12pt;color:#2a2418;margin:12pt 0 4pt;page-break-after:avoid}
+
+  p{margin:0 0 8pt;color:#3a3528;max-width:170mm}
+
+  pre{background:#0f0f0f;color:#e6dfcc;padding:10pt 12pt;border-radius:4pt;font-family:'JetBrains Mono','SF Mono',Consolas,monospace;font-size:9pt;line-height:1.55;overflow:hidden;margin:6pt 0 12pt;white-space:pre-wrap;page-break-inside:avoid;border-left:3pt solid #C6A559}
+  pre .c{color:#7a7468;font-style:italic}
+  code{background:#f0e9d3;color:#5a4a1f;padding:1pt 5pt;border-radius:3pt;font-family:'JetBrains Mono',Consolas,monospace;font-size:9pt}
+
+  table{width:100%;border-collapse:collapse;margin:6pt 0 12pt;font-size:9.5pt;page-break-inside:avoid}
+  th,td{padding:6pt 8pt;text-align:left;border-bottom:1px solid #ece2c8;vertical-align:top}
+  th{font-family:-apple-system,Inter,sans-serif;font-size:8.5pt;text-transform:uppercase;letter-spacing:0.12em;color:#8a6f33;background:#f8f1de;font-weight:600}
+  td:first-child{font-family:'JetBrains Mono',Consolas,monospace;font-size:9pt;color:#3a3528;white-space:nowrap}
+  td code{background:#f0e9d3}
+
+  .toc{column-count:2;column-gap:14mm;padding:8pt 0 14pt;border-bottom:1px solid #d7cda8;margin-bottom:14pt;font-size:10pt}
+  .toc a{color:#5a4a1f;text-decoration:none;display:block;padding:2pt 0;font-family:-apple-system,Inter,sans-serif}
+  .toc a::before{content:"› ";color:#C6A559}
+
+  .callout{background:#fff4d6;border-left:3pt solid #C6A559;padding:8pt 12pt;border-radius:0 4pt 4pt 0;margin:8pt 0 12pt;font-size:9.5pt;color:#5a4a1f;page-break-inside:avoid}
+  .callout strong{color:#3a2f0a}
+
+  footer{margin-top:18pt;padding-top:10pt;border-top:1px solid #d7cda8;font-family:'JetBrains Mono',monospace;font-size:8pt;color:#8a8472;display:flex;justify-content:space-between}
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div class="eyebrow">Tester.io · Day3-Forms project</div>
+  <h1>Commands <em>reference.</em></h1>
+  <div class="sub">A single page for every CLI command, URL, and credential.</div>
+  <div class="meta">
+    <span>Generated 2026-05-29</span>
+    <span>v1.0</span>
+    <span>Windows · PowerShell</span>
+  </div>
+</section>
+
+<main>
+
+<div class="toc">
+  <a href="#servers">Servers (long-running)</a>
+  <a href="#briefing">Morning briefing</a>
+  <a href="#briefing-api">Briefing API endpoints</a>
+  <a href="#playwright">Playwright tests</a>
+  <a href="#seed">Seed Supabase</a>
+  <a href="#supabase">Supabase CLI</a>
+  <a href="#npm">npm</a>
+  <a href="#sql">Supabase SQL patches</a>
+  <a href="#urls">Project URLs</a>
+  <a href="#values">Important values</a>
+  <a href="#process">Process control</a>
+  <a href="#trouble">Troubleshooting</a>
+</div>
+
+<h2 id="servers"><span class="ico">[01]</span>Servers <em>(long-running)</em></h2>
+<pre><span class="c"># Static site server</span>
+node serve.mjs                                  <span class="c"># → http://localhost:3000</span>
+
+<span class="c"># Express server (POST /api/contact → Google Sheets)</span>
+node server.js                                  <span class="c"># → http://localhost:3000</span>
+
+<span class="c"># Briefing daemon (cron + Run-now API on :3100)</span>
+node morning-briefing.mjs watch</pre>
+
+<h2 id="briefing"><span class="ico">[02]</span>Morning <em>briefing</em></h2>
+
+<h3>Preview (no email sent)</h3>
+<pre>node morning-briefing.mjs preview               <span class="c"># real Supabase leads (24h)</span>
+node morning-briefing.mjs preview --demo        <span class="c"># 6 sample leads</span></pre>
+
+<h3>Send for real</h3>
+<pre>node morning-briefing.mjs run                   <span class="c"># real leads, via Resend</span>
+node morning-briefing.mjs run --demo            <span class="c"># demo leads, via Resend</span>
+node morning-briefing.mjs run --gmail           <span class="c"># real leads, via Gmail</span>
+node morning-briefing.mjs run --demo --gmail    <span class="c"># demo leads, via Gmail</span></pre>
+
+<h3>Dry run (renders, prints stats, no email, no DB log)</h3>
+<pre>node morning-briefing.mjs run --demo --dry
+node morning-briefing.mjs run --gmail --dry</pre>
+
+<h2 id="briefing-api"><span class="ico">[03]</span>Briefing <em>API endpoints</em></h2>
+<p>Available only while the watch daemon is running.</p>
+<pre>curl.exe http://localhost:3100/api/briefing/health
+
+curl.exe -X POST http://localhost:3100/api/briefing/run-now
+curl.exe -X POST "http://localhost:3100/api/briefing/run-now?demo=1"
+curl.exe -X POST "http://localhost:3100/api/briefing/run-now?demo=1&gmail=1"
+curl.exe -X POST "http://localhost:3100/api/briefing/run-now?dry=1"
+
+curl.exe -X POST "http://localhost:3100/api/briefing/preview?demo=1"</pre>
+
+<h2 id="playwright"><span class="ico">[04]</span>Playwright <em>tests</em></h2>
+<pre>npx playwright test                             <span class="c"># all tests, headless</span>
+npx playwright test --headed                    <span class="c"># all tests, watch browser</span>
+npx playwright test --ui                        <span class="c"># interactive UI</span>
+npx playwright test --debug                     <span class="c"># step-through debugger</span>
+npx playwright show-report                      <span class="c"># open HTML report</span>
+
+<span class="c"># Specific spec files</span>
+npx playwright test tests/form.spec.mjs         <span class="c"># 20 form submissions</span>
+npx playwright test tests/links.spec.mjs        <span class="c"># link integrity audit</span>
+npx playwright test tests/briefing.spec.mjs     <span class="c"># briefing preview smoke</span>
+
+<span class="c"># Single test by line number</span>
+npx playwright test tests/form.spec.mjs:14</pre>
+
+<h2 id="seed"><span class="ico">[05]</span>Seed <em>Supabase</em></h2>
+<pre>node seed-supabase.mjs                          <span class="c"># 20 rows via edge function (sends emails)</span>
+node seed-supabase.mjs --no-email               <span class="c"># 20 rows via direct REST (needs insert RLS)</span></pre>
+
+<h2 id="supabase"><span class="ico">[06]</span>Supabase <em>CLI</em></h2>
+<pre><span class="c"># One-time setup</span>
+npx supabase login                              <span class="c"># OAuth in browser</span>
+npx supabase link --project-ref ejdarjipxnruwxoaimgs
+
+<span class="c"># Deploy edge functions</span>
+npx supabase functions deploy submit
+npx supabase functions deploy reply
+npx supabase functions deploy unsubscribe
+
+<span class="c"># Inspect</span>
+npx supabase functions list
+npx supabase functions logs submit              <span class="c"># tail logs</span>
+npx supabase secrets list                       <span class="c"># see secret names</span></pre>
+
+<h2 id="npm"><span class="ico">[07]</span>npm</h2>
+<pre>npm install                                     <span class="c"># install all deps</span>
+npm install -D @playwright/test                 <span class="c"># already done</span>
+npm install groq-sdk resend nodemailer node-cron <span class="c"># already done</span>
+
+npx playwright install                          <span class="c"># re-download browsers</span>
+npx playwright install chromium                 <span class="c"># just chromium</span></pre>
+
+<h2 id="sql"><span class="ico">[08]</span>Supabase <em>SQL patches</em></h2>
+<p>Run each once in the Supabase SQL editor at <code>supabase.com/dashboard/project/ejdarjipxnruwxoaimgs/sql/new</code>.</p>
+<table>
+  <thead><tr><th>File</th><th>What it enables</th></tr></thead>
+  <tbody>
+    <tr><td>supabase/dashboard-read-policy.sql</td><td>Dashboard reads submissions + unsubscribe button works</td></tr>
+    <tr><td>supabase/dashboard-tables.sql</td><td>Creates <code>email_log</code> + <code>newsletters</code> tables</td></tr>
+    <tr><td>supabase/email-log-add-briefing-source.sql</td><td>Allows briefing sends to log to <code>email_log</code></td></tr>
+  </tbody>
+</table>
+
+<h2 id="urls"><span class="ico">[09]</span>Project <em>URLs</em></h2>
+<table>
+  <thead><tr><th>URL</th><th>Page</th></tr></thead>
+  <tbody>
+    <tr><td>localhost:3000/</td><td>Tester.io landing</td></tr>
+    <tr><td>localhost:3000/dashboard.html</td><td>Admin dashboard (pwd: <code>tester-io-admin</code>)</td></tr>
+    <tr><td>localhost:3000/briefing/preview.html</td><td>Last generated email preview</td></tr>
+    <tr><td>localhost:3000/contact.html</td><td>Contact page</td></tr>
+    <tr><td>localhost:3000/customers.html</td><td>Customers page</td></tr>
+    <tr><td>localhost:3000/changelog.html</td><td>Changelog</td></tr>
+    <tr><td>localhost:3000/status.html</td><td>Service status</td></tr>
+    <tr><td>localhost:3000/manifesto.html</td><td>Manifesto</td></tr>
+    <tr><td>localhost:3000/careers.html</td><td>Open roles</td></tr>
+    <tr><td>localhost:3000/press.html</td><td>Press kit</td></tr>
+    <tr><td>localhost:3000/privacy.html</td><td>Privacy policy</td></tr>
+    <tr><td>localhost:3000/terms.html</td><td>Terms</td></tr>
+    <tr><td>localhost:3000/security.html</td><td>Security practices</td></tr>
+    <tr><td>localhost:3000/dpa.html</td><td>Data Processing Addendum</td></tr>
+    <tr><td>localhost:3000/TesterTech.html</td><td>Smart devices catalog</td></tr>
+    <tr><td>localhost:3000/Sights.html</td><td>Field-notes journal</td></tr>
+    <tr><td>localhost:3100/api/briefing/health</td><td>Briefing daemon status</td></tr>
+  </tbody>
+</table>
+
+<h2 id="values"><span class="ico">[10]</span>Important <em>values</em></h2>
+<table>
+  <thead><tr><th>What</th><th>Value</th></tr></thead>
+  <tbody>
+    <tr><td>Dashboard password</td><td><code>tester-io-admin</code></td></tr>
+    <tr><td>Local site port</td><td><code>:3000</code></td></tr>
+    <tr><td>Briefing daemon port</td><td><code>:3100</code></td></tr>
+    <tr><td>Supabase project ID</td><td><code>ejdarjipxnruwxoaimgs</code></td></tr>
+    <tr><td>Supabase table (leads)</td><td><code>form_submissions</code></td></tr>
+    <tr><td>Briefing cron schedule</td><td><code>0 8 * * *</code> (08:00 Asia/Manila)</td></tr>
+    <tr><td>Briefing recipient</td><td><code>aernestleanrivera@gmail.com</code></td></tr>
+    <tr><td>Resend "from"</td><td><code>onboarding@resend.dev</code></td></tr>
+    <tr><td>Gmail user</td><td><code>aernestleanrivera@gmail.com</code></td></tr>
+    <tr><td>Groq model</td><td><code>llama-3.3-70b-versatile</code></td></tr>
+  </tbody>
+</table>
+
+<h2 id="process"><span class="ico">[11]</span>Process <em>control</em></h2>
+<pre><span class="c"># Check what is listening on each port</span>
+netstat -ano | findstr :3000
+netstat -ano | findstr :3100
+
+<span class="c"># Kill all node processes</span>
+Get-Process node | Stop-Process
+
+<span class="c"># Kill a specific PID (from netstat)</span>
+Stop-Process -Id 12345</pre>
+
+<h2 id="trouble"><span class="ico">[12]</span>Trouble<em>shooting</em></h2>
+<table>
+  <thead><tr><th>Symptom</th><th>Fix</th></tr></thead>
+  <tbody>
+    <tr><td>"Daemon not running on :3100" in dashboard</td><td>Run <code>node morning-briefing.mjs watch</code></td></tr>
+    <tr><td>"RESEND_API_KEY missing"</td><td>Open <code>.env</code>, set <code>RESEND_API_KEY=re_...</code></td></tr>
+    <tr><td>"GMAIL_USER / GMAIL_PASS_ARCA missing"</td><td>Open <code>.env</code>, fill both</td></tr>
+    <tr><td>"You can only send testing emails…" (Resend)</td><td>Change <code>BRIEFING_TO</code> to your Resend-registered email, OR verify a domain</td></tr>
+    <tr><td>Dashboard 401 / RLS error</td><td>Run <code>supabase/dashboard-read-policy.sql</code></td></tr>
+    <tr><td>"relation … does not exist"</td><td>Run <code>supabase/dashboard-tables.sql</code></td></tr>
+    <tr><td>Briefings not in Email Log tab</td><td>Run <code>supabase/email-log-add-briefing-source.sql</code></td></tr>
+    <tr><td>Port 3000 / 3100 already in use</td><td><code>Get-Process node | Stop-Process</code> then restart</td></tr>
+  </tbody>
+</table>
+
+<div class="callout">
+  <strong>Pro tip.</strong> Start two PowerShell terminals at the project root and leave them running: <code>node serve.mjs</code> in one, <code>node morning-briefing.mjs watch</code> in the other. The dashboard will detect both daemons automatically.
+</div>
+
+<footer>
+  <span>Tester.io — Day3-Forms · commands-reference.pdf</span>
+  <span>Page generated 2026-05-29</span>
+</footer>
+
+</main>
+</body>
+</html>

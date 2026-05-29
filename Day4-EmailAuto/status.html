@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Status — Tester.io</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Montserrat:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/subpage.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a class="brand" href="index.html"><img class="brand-logo" src="brand_assets/Tester Logo.png" alt="Tester.io logo" /><span class="brand-word">Tester<span class="tld">.io</span></span></a>
+  <ul id="primary-nav"><li><a href="index.html#platform">Platform</a></li><li><a href="index.html#workflow">Workflow</a></li><li><a href="index.html#reports">Reports</a></li><li><a href="index.html#products">Products</a></li><li><a href="index.html#pricing">Pricing</a></li><li><a href="TesterTech.html">TesterTech</a></li><li><a href="Sights.html">Adventure</a></li></ul>
+  <a class="cta" href="contact.html">Get Started</a>
+  <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
+</nav>
+
+<main class="page">
+  <div class="crumbs"><a href="index.html">Home</a><span>/</span><span>Status</span></div>
+  <h1 class="title">All systems <em>nominal.</em></h1>
+  <p class="lede">Real-time platform health across runners, dashboards, and integrations. <span style="color:var(--gold-2)">Updated every 60 seconds.</span></p>
+
+  <h2>Core <em>services</em></h2>
+  <div>
+    <div class="status-row"><div><span class="dot ok"></span><span class="name">API · api.tester.io</span></div><div class="meta">99.997% · 30d</div></div>
+    <div class="status-row"><div><span class="dot ok"></span><span class="name">Dashboard · app.tester.io</span></div><div class="meta">99.992% · 30d</div></div>
+    <div class="status-row"><div><span class="dot ok"></span><span class="name">Runner Cloud · EU</span></div><div class="meta">99.991% · 30d</div></div>
+    <div class="status-row"><div><span class="dot ok"></span><span class="name">Runner Cloud · US-East</span></div><div class="meta">99.989% · 30d</div></div>
+    <div class="status-row"><div><span class="dot ok"></span><span class="name">Runner Cloud · US-West</span></div><div class="meta">99.994% · 30d</div></div>
+    <div class="status-row"><div><span class="dot ok"></span><span class="name">Runner Cloud · APAC</span></div><div class="meta">99.985% · 30d</div></div>
+    <div class="status-row"><div><span class="dot ok"></span><span class="name">Artifact storage · S3 buckets</span></div><div class="meta">100.000% · 30d</div></div>
+    <div class="status-row"><div><span class="dot warn"></span><span class="name">Reports · cohort analytics</span></div><div class="meta">degraded · investigating</div></div>
+  </div>
+
+  <h2>Integrations</h2>
+  <div>
+    <div class="status-row"><div><span class="dot ok"></span><span class="name">GitHub Checks</span></div><div class="meta">operational</div></div>
+    <div class="status-row"><div><span class="dot ok"></span><span class="name">GitLab CI</span></div><div class="meta">operational</div></div>
+    <div class="status-row"><div><span class="dot ok"></span><span class="name">CircleCI orb</span></div><div class="meta">operational</div></div>
+    <div class="status-row"><div><span class="dot ok"></span><span class="name">Slack notifications</span></div><div class="meta">operational</div></div>
+    <div class="status-row"><div><span class="dot ok"></span><span class="name">Microsoft Teams webhook</span></div><div class="meta">operational</div></div>
+    <div class="status-row"><div><span class="dot ok"></span><span class="name">Datadog / Honeycomb pipes</span></div><div class="meta">operational</div></div>
+  </div>
+
+  <h2>Recent <em>incidents</em></h2>
+  <div class="changelog">
+    <div class="entry"><div class="meta"><span class="ver">Investigating</span>May 29, 2026 · 13:42 UTC</div><h3>Reports — cohort analytics returning stale data</h3><p>Some cohort views are showing data lagged by ~12 minutes. Test runs themselves are unaffected. We're rolling forward a query-plan fix.</p></div>
+    <div class="entry"><div class="meta"><span class="ver">Resolved</span>May 21, 2026 · 09:08 UTC → 09:21 UTC</div><h3>EU runner queue saturation</h3><p>A backlog formed in the EU region after a customer initiated a 40,000-spec retry storm. Resolved by adding 60 capacity units; postmortem available on request.</p></div>
+    <div class="entry"><div class="meta"><span class="ver">Resolved</span>April 30, 2026 · 23:17 UTC → 23:32 UTC</div><h3>GitHub Checks delivery delays</h3><p>Upstream GitHub Checks API rate-limited our service account during their incident. We've since added an exponential-backoff middleware.</p></div>
+  </div>
+
+  <p style="margin-top:32px;font-size:13px;color:var(--muted)">Subscribe to incident notifications by <a class="inline" href="contact.html">emailing us your address</a>. RSS feed at <span style="font-family:var(--mono);color:var(--gold-2)">/status.rss</span>.</p>
+</main>
+
+<div class="colophon">
+  <div class="mast"><div class="lock">Tester<span>.io</span></div><p>The unified QA platform for teams that ship daily. Built with care in Berlin, run from everywhere.</p></div>
+  <div><div class="col-h">Product</div><div class="col-list"><a href="index.html#platform">Platform</a><a href="index.html#workflow">Workflow</a><a href="index.html#reports">Reports</a><a href="index.html#pricing">Pricing</a><a href="changelog.html">Changelog</a></div></div>
+  <div><div class="col-h">Company</div><div class="col-list"><a href="manifesto.html">Manifesto</a><a href="careers.html">Careers</a><a href="customers.html">Customers</a><a href="press.html">Press</a><a href="contact.html">Contact</a></div></div>
+  <div><div class="col-h">Legal &amp; Status</div><div class="col-list"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="security.html">Security</a><a href="dpa.html">DPA</a><a href="status.html">Status page</a></div></div>
+</div>
+<div class="footer-meta"><span>© 2026 Tester.io</span><span class="live"><i></i>Built in Berlin · v2.4.0 · All systems nominal</span><span><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="status.html">Status</a></span></div>
+
+<script>(function(){const nav=document.querySelector('.nav'),btn=document.querySelector('.nav-toggle');if(!nav||!btn)return;const close=()=>{nav.classList.remove('open');btn.setAttribute('aria-expanded','false')};btn.addEventListener('click',()=>{const open=nav.classList.toggle('open');btn.setAttribute('aria-expanded',open?'true':'false')});document.addEventListener('click',e=>{if(nav.classList.contains('open')&&!nav.contains(e.target))close()});nav.querySelectorAll('ul a').forEach(a=>a.addEventListener('click',close));window.addEventListener('resize',()=>{if(window.innerWidth>780)close()})})();</script>
+</body>
+</html>

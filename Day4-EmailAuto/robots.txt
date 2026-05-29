@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard.html
+Disallow: /test-results/
+Disallow: /tests/
+
+Sitemap: https://tester.io/sitemap.xml
