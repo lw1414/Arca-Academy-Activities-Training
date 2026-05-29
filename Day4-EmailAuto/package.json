@@ -1,0 +1,26 @@
+{
+  "name": "day4-email-auto",
+  "version": "1.0.0",
+  "description": "Automated morning briefing — Supabase form_submissions → AI summary (Groq/Claude) → email (Resend/Gmail). Local node-cron + Vercel Cron.",
+  "type": "module",
+  "main": "morning-briefing.mjs",
+  "scripts": {
+    "preview": "node morning-briefing.mjs preview --demo",
+    "run:demo": "node morning-briefing.mjs run --demo",
+    "watch": "node morning-briefing.mjs watch",
+    "test": "playwright test"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.74.0",
+    "dotenv": "^16.4.5",
+    "groq-sdk": "^0.36.0",
+    "node-cron": "^4.2.2",
+    "nodemailer": "^7.0.10",
+    "resend": "^6.4.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1"
+  },
+  "keywords": ["briefing", "email-automation", "supabase", "groq", "claude", "resend", "vercel-cron"],
+  "license": "MIT"
+}
