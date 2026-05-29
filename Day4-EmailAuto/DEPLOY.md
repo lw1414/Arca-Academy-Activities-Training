@@ -1,150 +1,180 @@
-# Deploying the morning briefing to Vercel (Hobby / free tier)
+# Deploying Day4-EmailAuto to Vercel (Hobby / free tier)
 
-This guide deploys `api/briefing.mjs` as a Vercel serverless function and wires Vercel Cron to fire it daily at **07:00 Asia/Manila**.
+This project lives at `Day4-EmailAuto/` inside the
+[Arca-Academy-Activities-Training](https://github.com/lw1414/Arca-Academy-Activities-Training)
+repo. You deploy it as a **subfolder project** — Vercel needs to know to look
+inside `Day4-EmailAuto/`, not at the repo root.
 
-The local `morning-briefing.mjs` keeps working unchanged — Vercel just gives you a hands-off scheduled run that doesn't need your laptop on.
+After deploy, `api/briefing.mjs` becomes a serverless endpoint, and Vercel Cron
+fires it daily at **07:00 Asia/Manila**. Your laptop can be off — Vercel runs
+it in the cloud.
 
 ---
 
-## Prerequisites
-
-- A Vercel account (Hobby plan is fine — no credit card required)
-- The Vercel CLI installed (optional but easier): `npm i -g vercel`
-- This repo pushed to GitHub (Vercel deploys from a repo)
-
 ## What gets deployed
 
-| Path | Becomes |
+| Local file | Becomes |
 |---|---|
-| `api/briefing.mjs` | A serverless function at `https://<your-project>.vercel.app/api/briefing` |
-| `vercel.json` → `crons` | A daily cron that POSTs to `/api/briefing` |
-| Everything else (`index.html`, `dashboard.html`, etc.) | Static files served from the same domain |
+| `api/briefing.mjs` | `https://<your-project>.vercel.app/api/briefing` |
+| `vercel.json` → `crons` | Daily cron POSTing to `/api/briefing` |
+| Everything else | Static assets (README etc., nothing user-facing) |
 
-## 1 — Push to GitHub
+The cron schedule in [vercel.json](./vercel.json) is `0 23 * * *` UTC = **07:00 Asia/Manila** (UTC+8).
 
-If you haven't already:
-```powershell
-git add .
-git commit -m "Add Vercel briefing function"
-git push
-```
+---
 
-## 2 — Import into Vercel
+## Step 1 — Import the repo into Vercel
 
-1. Go to https://vercel.com/new
-2. Pick the GitHub repo
-3. **Don't change** the build settings — Vercel will detect `vercel.json` and skip the build step (your project is static + one serverless function)
-4. Click **Deploy**
+1. Open https://vercel.com/new
+2. Click **Add GitHub Account** if needed, authorize Vercel on `lw1414/Arca-Academy-Activities-Training`
+3. Find the repo → click **Import**
+4. On the configuration screen:
 
-The first deploy will succeed but the briefing won't run yet — env vars are missing.
+   | Field | Value |
+   |---|---|
+   | **Project Name** | `day4-email-auto` (or whatever you like) |
+   | **Framework Preset** | `Other` |
+   | **Root Directory** | ⚠️ **Click "Edit" and set to `Day4-EmailAuto`** |
+   | **Build Command** | leave blank (uses default) |
+   | **Output Directory** | leave blank |
+   | **Install Command** | leave default (`npm install`) |
 
-## 3 — Add environment variables
+   The Root Directory step is the most important one. Without it the build will
+   fail because Vercel won't find `package.json` or the `api/` folder.
 
-In your project on Vercel: **Settings → Environment Variables**. Add these (paste the same values from your local `.env`):
+5. Click **Deploy**
+
+The first deploy will succeed but the briefing won't actually send — env vars
+are missing. That's the next step.
+
+---
+
+## Step 2 — Add environment variables
+
+Vercel → your project → **Settings → Environment Variables**. Add each row
+(check **Production, Preview, AND Development** for each):
 
 | Key | Example value |
 |---|---|
-| `BRIEFING_AI` | `claude` |
-| `ANTHROPIC_API_KEY` | `sk-ant-...` |
-| `ANTHROPIC_MODEL` | `claude-sonnet-4-6` |
-| `GROQ_API_KEY` *(optional fallback)* | `gsk_...` |
+| `BRIEFING_AI` | `groq` |
+| `GROQ_API_KEY` | `gsk_...` *(from console.groq.com)* |
 | `GROQ_MODEL` | `llama-3.3-70b-versatile` |
-| `SUPABASE_URL` | `https://ejdarjipxnruwxoaimgs.supabase.co` |
+| `SUPABASE_URL` | `https://<your-project>.supabase.co` |
 | `SUPABASE_ANON_KEY` | `sb_publishable_...` |
 | `SUPABASE_TABLE` | `form_submissions` |
-| `RESEND_API_KEY` | `re_...` |
-| `RESEND_FROM` | `onboarding@resend.dev` *(or `briefing@yourdomain.com` after you verify a domain)* |
-| `BRIEFING_TO` | `aernestleanrivera@gmail.com` |
+| `RESEND_API_KEY` | `re_...` *(from resend.com/api-keys, "Sending access")* |
+| `RESEND_FROM` | `onboarding@resend.dev` *(or `briefing@yourdomain.com` if you verify a domain)* |
+| `BRIEFING_TO` | your recipient email — **must match the email registered with Resend** unless you verified a domain |
 | `BRIEFING_TZ` | `Asia/Manila` |
-| `BRIEFING_SECRET` | a long random string — generate one below |
-| `PUBLIC_SITE_URL` *(optional)* | `https://<your-project>.vercel.app` *(used for the "Open dashboard" CTA in the email)* |
+| `BRIEFING_SECRET` | a long random string — **see below** |
 
-### Generate a `BRIEFING_SECRET`
+> Not needed on Vercel: `ANTHROPIC_API_KEY`, `ANTHROPIC_MODEL`, `GMAIL_*`,
+> `BRIEFING_PORT`, `BRIEFING_CRON`. Groq + Resend cover everything; the
+> schedule is hard-coded in `vercel.json`.
+
+### Generate `BRIEFING_SECRET`
 
 In PowerShell:
 ```powershell
 -join ((48..57) + (65..90) + (97..122) | Get-Random -Count 48 | ForEach-Object {[char]$_})
 ```
-Or just open https://1password.com/password-generator/ and copy a 48-char alphanumeric.
 
-Add the same value to your local `.env` as `BRIEFING_SECRET` so the dashboard's "Run now" button can authenticate.
+Or paste a 48-char alphanumeric from https://1password.com/password-generator/.
 
-After saving, **redeploy** so the new env vars take effect: Deployments → top-right ··· → Redeploy.
+Store the same value somewhere safe — you'll need it to manually trigger the
+function for testing.
 
-## 4 — Verify the cron is wired
+---
 
-After redeploy, on Vercel: **Settings → Cron Jobs**. You should see one entry:
+## Step 3 — Redeploy so env vars take effect
+
+In Vercel → **Deployments** → top entry → **···** → **Redeploy** → confirm.
+Wait ~30 seconds.
+
+---
+
+## Step 4 — Verify the cron is registered
+
+Vercel → **Settings → Cron Jobs**. You should see:
 
 ```
-GET  /api/briefing    0 23 * * *
+GET   /api/briefing    0 23 * * *
 ```
 
-Why `0 23 * * *` and not `0 7 * * *`? **Vercel Cron schedules are UTC**, and Asia/Manila is UTC+8. So 07:00 Manila = 23:00 UTC the previous day.
+That's **07:00 Asia/Manila** daily.
 
-> Hobby plan caveat: cron schedules on Hobby are rounded to daily granularity. The job fires once per day around that time, not always exactly at the minute.
+> Vercel Hobby plan caveat: cron schedules are rounded to **daily
+> granularity** — fires once per day around that time, not exactly to the
+> minute. Fine for a morning briefing.
 
-## 5 — Trigger it manually to test
+---
 
-Once deployed:
+## Step 5 — Smoke-test the deployed endpoint
+
 ```powershell
-# Replace with your project URL + the secret you set in env vars
-$URL = "https://<your-project>.vercel.app/api/briefing"
-$SECRET = "<the BRIEFING_SECRET you set>"
+# Replace placeholders
+$URL    = "https://<your-project>.vercel.app/api/briefing"
+$SECRET = "<your BRIEFING_SECRET>"
 
-# Dry run (renders, does not send)
+# Dry run with demo leads (no email sent, just confirms config)
 curl.exe "$URL`?dry=1&demo=1&secret=$SECRET"
 
-# Send for real, with demo leads
+# Real send with demo leads
 curl.exe "$URL`?demo=1&secret=$SECRET"
 
-# Send for real, with live Supabase leads (last 24h)
+# Real send with live Supabase leads (last 24h)
 curl.exe "$URL`?secret=$SECRET"
 ```
 
-Or in your browser, just paste the URL with `?dry=1&demo=1&secret=...` — you'll get a JSON response. Check the **Email Log** tab in the dashboard for the new row.
-
-## 6 — Point the dashboard's "Run now" button at the deployed function
-
-Edit [dashboard.html](../dashboard.html), change the `BRIEFING_API` constant:
-
-```js
-// BEFORE
-const BRIEFING_API = 'http://localhost:3100';
-
-// AFTER (use deployed URL + add secret as a query param appended in withProvider)
-const BRIEFING_API  = 'https://<your-project>.vercel.app';
-const BRIEFING_SECRET = '<the BRIEFING_SECRET>';
+Expected response on success:
+```json
+{"ok":true,"id":"...","provider":"resend","headline":"...","total":6,"cron":false}
 ```
 
-Then update the fetch URLs in the briefing JS block to append `&secret=${BRIEFING_SECRET}`. Or — more pragmatically — keep both:
-- `http://localhost:3100` for local dev when the `watch` daemon is running
-- the Vercel URL for production
+Email lands in your inbox in seconds. The row also appears in your Supabase
+`email_log` table with `source='briefing'`.
 
-A 5-line guard at the top of the briefing JS block can flip between them based on `location.hostname`.
+---
 
-## Vercel Hobby plan limits to know
+## Step 6 — Hands-off mode
 
-| Limit | Impact |
+Once Step 1–4 are done, you can **close your laptop**. The cron fires daily
+in Vercel's cloud. To stop it, see "Cleanup" below.
+
+---
+
+## Vercel Hobby plan limits — relevant ones
+
+| Limit | This project's usage |
 |---|---|
-| 1 cron job per project | We use it for the briefing. Fine. |
-| Daily cron precision only | Job fires once a day — not on a fine schedule. Fine for a morning briefing. |
-| 10 second function timeout (default) | One Claude call + one Resend POST takes < 3s. Fine. `maxDuration: 30` in vercel.json gives extra headroom. |
-| 100 GB-hours of function execution / month | This function runs ~1 sec/day. Free for life at this scale. |
+| 1 cron job per project | We use 1. ✓ |
+| Daily cron precision | Fine for a morning briefing. |
+| 10 second function timeout (default) | One Groq + one Resend call takes ~2s. ✓ The `maxDuration: 30` in `vercel.json` gives headroom. |
+| 100 GB-hours / month free | We use ~30 seconds/month. ✓ |
+
+---
 
 ## Troubleshooting
 
 | Symptom | Fix |
 |---|---|
-| "invalid_secret" 401 from manual trigger | Make sure `?secret=...` matches the env var on Vercel exactly. |
-| Function logs say "ANTHROPIC_API_KEY missing" | You forgot to add it in Settings → Environment Variables, or you added it for "Preview" only — also add for "Production". |
-| Cron doesn't fire | Vercel only re-evaluates `vercel.json` cron config on deploy. After editing `vercel.json`, redeploy. |
-| Email lands in spam | Verify a domain in Resend and change `RESEND_FROM` to `briefing@yourdomain.com`. |
-| Need to change the schedule | Edit `crons[0].schedule` in `vercel.json` (UTC cron syntax), commit, push, redeploy. |
+| Build fails "no package.json found" | You didn't set **Root Directory = `Day4-EmailAuto`** in Step 1 |
+| 401 `invalid_secret` from manual trigger | `?secret=...` must match the Vercel env var exactly. Re-check capitalization. |
+| 500 `ANTHROPIC_API_KEY missing` | Shouldn't be needed if `BRIEFING_AI=groq`. Confirm `GROQ_API_KEY` is set and `BRIEFING_AI=groq`. |
+| 500 `Resend: You can only send testing emails…` | Resend free tier restricts recipients. Change `BRIEFING_TO` to your Resend-registered email, or verify a domain. |
+| Email lands in spam | Verify a domain in Resend → change `RESEND_FROM` to `briefing@yourdomain.com` |
+| Cron doesn't fire | Vercel re-reads `vercel.json` cron config only on deploy. After any cron edit, push → redeploy. |
+| Need a different time | Edit `crons[0].schedule` in `vercel.json` (UTC cron). 7 AM Manila = `0 23 * * *`. Commit, push, redeploy. |
+
+---
 
 ## Cleanup / rollback
 
-To stop the briefing without deleting the project:
-1. Vercel → Settings → Cron Jobs → toggle off
+To pause the briefing without deleting the deployment:
+
+1. Vercel → **Settings → Cron Jobs** → toggle the cron OFF
 2. Or remove the `crons` array from `vercel.json` and redeploy
 
-To delete the function entirely: delete `api/briefing.mjs`, remove the `crons` block from `vercel.json`, commit, push.
+To delete everything:
+1. Vercel → **Settings → Advanced → Delete Project**
+2. Or delete `Day4-EmailAuto/` from the repo
