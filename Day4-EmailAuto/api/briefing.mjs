@@ -133,8 +133,16 @@ async function logToSupabase({ subject, html, status, error }) {
 }
 
 export default async function handler(req, res) {
-  // Auth: Vercel Cron sets `x-vercel-cron: 1`. Manual triggers must include the secret.
-  const isCron = req.headers['x-vercel-cron'] === '1';
+  // Cron auth: Vercel sends User-Agent "vercel-cron/1.0" (most reliable signal).
+  // Legacy x-vercel-cron header may also appear, and Bearer auth if CRON_SECRET is set.
+  // Manual triggers must include ?secret=<BRIEFING_SECRET>.
+  const ua = req.headers['user-agent'] || '';
+  const authHeader = req.headers['authorization'] || '';
+  const cronSecret = process.env.CRON_SECRET;
+  const isCron =
+    req.headers['x-vercel-cron'] === '1' ||
+    ua.startsWith('vercel-cron') ||
+    (cronSecret && authHeader === `Bearer ${cronSecret}`);
   const url = new URL(req.url, `http://${req.headers.host}`);
   const passed = url.searchParams.get('secret') || req.headers['x-briefing-secret'];
   if (!isCron) {
