@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FrontEnd — Mood Board Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Hanken+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#08090c; --bg-2:#0b0d11; --panel:#0f1318; --panel-2:#13181f; --panel-3:#171d25;
+  --line:rgba(255,255,255,.07); --line-2:rgba(255,255,255,.13); --line-3:rgba(255,255,255,.22);
+  --text:#eef1f5; --muted:#8b939f; --muted-2:#5b626d; --muted-3:#3c424b;
+  --accent:#43b8f0; --accent-bright:#62c8f6; --accent-deep:#1f93d4; --accent-ink:#06151f;
+  --danger:#f06a5a; --ok:#5bd6a0;
+  --serif:"Fraunces",Georgia,serif; --sans:"Hanken Grotesk",system-ui,sans-serif; --mono:"JetBrains Mono",monospace;
+  --r-sm:10px; --r-md:14px; --r-lg:20px; --r-xl:26px;
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --shadow-card:0 1px 0 rgba(255,255,255,.04) inset, 0 30px 60px -32px rgba(0,0,0,.85);
+  --shadow-glow:0 10px 34px -8px rgba(67,184,240,.5);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans); background:var(--bg); color:var(--text);
+  -webkit-font-smoothing:antialiased; line-height:1.5; overflow-x:hidden;
+  position:relative; min-height:100vh;
+}
+/* atmospheric background */
+.bg-layer{position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background:
+    radial-gradient(900px 600px at 88% -8%, rgba(67,184,240,.16), transparent 60%),
+    radial-gradient(800px 700px at -6% 12%, rgba(67,184,240,.07), transparent 55%),
+    radial-gradient(1000px 800px at 50% 120%, rgba(40,70,110,.16), transparent 60%),
+    var(--bg);
+}
+.grain{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+.wrap{max-width:1240px;margin:0 auto;padding:0 40px}
+@media(max-width:720px){.wrap{padding:0 22px}}
+
+/* ---------- top bar ---------- */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:30px 0 0;gap:18px}
+.topbar .left{display:flex;align-items:center;gap:20px;min-width:0}
+.brandmark{display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--accent);font-weight:600}
+.brandmark .spark{width:14px;height:14px;color:var(--accent)}
+.topbar .meta{font-family:var(--mono);font-size:11px;color:var(--muted-2);letter-spacing:.12em}
+.backlink{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;
+  padding:9px 15px 9px 12px;border:1px solid var(--line);border-radius:100px;
+  transition:color .25s var(--ease),border-color .25s var(--ease),background .25s var(--ease)}
+.backlink .arr{width:14px;height:14px;color:var(--accent);transition:transform .25s var(--ease)}
+.backlink:hover{color:var(--text);border-color:var(--line-3);background:rgba(67,184,240,.05)}
+.backlink:hover .arr{transform:translateX(-3px)}
+.backlink:focus-visible{outline:none;box-shadow:0 0 0 4px rgba(67,184,240,.3);border-color:var(--accent)}
+.backlink:active{transform:scale(.98)}
+@media(max-width:560px){.backlink .txt{display:none}.backlink{padding:9px 11px}}
+
+/* ---------- hero ---------- */
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;align-items:center;
+  padding:54px 0 80px;min-height:78vh}
+@media(max-width:980px){.hero{grid-template-columns:1fr;gap:40px;padding:40px 0 56px;min-height:auto}}
+
+.display{position:relative}
+.display h1{font-family:var(--serif);font-weight:500;letter-spacing:-.035em;line-height:.9;
+  font-size:clamp(64px,9.5vw,140px);color:var(--text)}
+.display h1 .ghost{display:block;color:transparent;-webkit-text-stroke:1.2px rgba(255,255,255,.16);
+  font-style:italic;font-weight:400;opacity:.9;margin-top:-.04em}
+.hero-reveal{opacity:0;transform:translateY(22px);animation:rise .9s var(--ease) forwards}
+.d1{animation-delay:.05s}.d2{animation-delay:.13s}.d3{animation-delay:.22s}.d4{animation-delay:.32s}.d5{animation-delay:.42s}
+@keyframes rise{to{opacity:1;transform:none}}
+
+.directions{margin-top:48px;max-width:380px}
+.directions .row{display:grid;grid-template-columns:34px 1fr;align-items:center;gap:18px;
+  padding:15px 0;border-top:1px solid var(--line)}
+.directions .row:last-child{border-bottom:1px solid var(--line)}
+.directions .num{font-family:var(--mono);font-size:12px;color:var(--accent)}
+.directions .label{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.directions .row::after{content:"";justify-self:end;width:6px;height:6px;border-radius:50%;
+  background:var(--line-3);grid-column:2;justify-self:end}
+
+.poweredby{margin-top:40px;font-family:var(--mono);font-size:11px;color:var(--muted-2);letter-spacing:.06em}
+
+/* ---------- brief panel ---------- */
+.panel{background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--line);
+  border-radius:var(--r-xl);padding:34px 32px;box-shadow:var(--shadow-card);position:relative;overflow:hidden}
+.panel::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(420px 200px at 100% 0,rgba(67,184,240,.08),transparent 70%)}
+.panel-head{font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.panel-sub{margin-top:12px;color:var(--muted);font-size:14.5px;line-height:1.6;max-width:42ch}
+
+.field{margin-top:26px}
+.field .lbl{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px}
+.field .lbl span:first-child{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--text);font-weight:600}
+.field .lbl .hint{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2)}
+.field .hint.req{color:var(--accent)}
+.field input,.field textarea{width:100%;background:#090b0e;border:1px solid var(--line);
+  border-radius:var(--r-md);color:var(--text);font-family:var(--sans);font-size:15px;
+  padding:14px 16px;transition:border-color .25s var(--ease),box-shadow .25s var(--ease),background .25s}
+.field textarea{min-height:96px;resize:vertical;line-height:1.55}
+.field input::placeholder,.field textarea::placeholder{color:var(--muted-3)}
+.field input:hover,.field textarea:hover{border-color:var(--line-2)}
+.field input:focus-visible,.field textarea:focus-visible{outline:none;border-color:var(--accent);
+  background:#0a0d12;box-shadow:0 0 0 4px rgba(67,184,240,.13)}
+.field.err input,.field.err textarea{border-color:var(--danger);box-shadow:0 0 0 4px rgba(240,106,90,.12)}
+.select-wrap{position:relative}
+.select-wrap select{width:100%;appearance:none;-webkit-appearance:none;background:#090b0e;border:1px solid var(--line);
+  border-radius:var(--r-md);color:var(--text);font-family:var(--sans);font-size:15px;padding:14px 42px 14px 16px;
+  cursor:pointer;transition:border-color .25s var(--ease),box-shadow .25s var(--ease),background .25s}
+.select-wrap select:hover{border-color:var(--line-2)}
+.select-wrap select:focus-visible{outline:none;border-color:var(--accent);background:#0a0d12;box-shadow:0 0 0 4px rgba(67,184,240,.13)}
+.select-wrap select option{background:#0c0e12;color:var(--text)}
+.select-wrap .chev{position:absolute;right:15px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--muted);pointer-events:none}
+.model-note{margin-top:9px;font-family:var(--mono);font-size:10.5px;letter-spacing:.02em;color:var(--muted-2);line-height:1.55}
+.model-note b{color:var(--muted);font-weight:500}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;
+  font-family:var(--sans);font-weight:600;font-size:14px;border:1px solid transparent;border-radius:var(--r-md);
+  transition:transform .18s var(--ease),box-shadow .25s var(--ease),background .25s,border-color .25s,color .2s;
+  user-select:none}
+.btn:focus-visible{outline:none;box-shadow:0 0 0 4px rgba(67,184,240,.3)}
+.btn .ic{width:16px;height:16px}
+.btn-primary{width:100%;margin-top:30px;padding:16px;letter-spacing:.04em;color:var(--accent-ink);
+  background:linear-gradient(135deg,var(--accent-bright),var(--accent-deep));box-shadow:var(--shadow-glow);
+  text-transform:uppercase;font-size:13px;letter-spacing:.14em}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 40px -8px rgba(67,184,240,.62)}
+.btn-primary:active{transform:translateY(0) scale(.99)}
+.btn-primary:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-ghost{width:100%;margin-top:12px;padding:14px;background:transparent;border-color:var(--line-2);
+  color:var(--muted);text-transform:uppercase;font-size:12px;letter-spacing:.16em}
+.btn-ghost:hover{border-color:var(--accent);color:var(--text);background:rgba(67,184,240,.05)}
+.btn-ghost:active{transform:scale(.99)}
+
+.form-msg{margin-top:14px;font-size:13px;min-height:18px;font-family:var(--mono);letter-spacing:.02em}
+.form-msg.err{color:var(--danger)}.form-msg.ok{color:var(--ok)}.form-msg.info{color:var(--accent)}
+
+/* ---------- results ---------- */
+.results{padding:10px 0 120px;display:none}
+.results.show{display:block}
+.results-top{display:flex;align-items:center;justify-content:space-between;
+  padding:28px 0 8px;border-top:1px solid var(--line);margin-top:8px}
+.results-top .title{font-family:var(--serif);font-size:clamp(26px,3.4vw,40px);font-weight:500;letter-spacing:-.02em}
+.results-top .count{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);
+  padding:8px 14px;border-radius:100px}
+.results-top .count .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent)}
+
+.cat-block{margin-top:54px}
+.cat-head{position:relative;display:flex;align-items:center;gap:22px;margin-bottom:26px}
+.cat-head .bignum{font-family:var(--serif);font-size:clamp(70px,9vw,118px);font-weight:500;line-height:.8;
+  color:transparent;-webkit-text-stroke:1.3px var(--line-3);letter-spacing:-.04em;flex:none}
+.cat-head .ctext{display:flex;flex-direction:column;gap:10px}
+.cat-head .badge{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;
+  font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);
+  border:1px solid var(--line-2);padding:6px 12px;border-radius:100px}
+.cat-head .badge .gem{width:9px;height:9px;transform:rotate(45deg);background:var(--accent);border-radius:2px}
+.cat-head .cname{font-family:var(--serif);font-size:clamp(30px,4vw,46px);font-weight:500;letter-spacing:-.02em}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+@media(max-width:820px){.grid{grid-template-columns:1fr}}
+
+/* ---------- concept card ---------- */
+.card{background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--line);
+  border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow-card);
+  opacity:0;transform:translateY(20px);animation:rise .7s var(--ease) forwards;
+  transition:border-color .3s var(--ease),transform .3s var(--ease)}
+.card:hover{border-color:var(--line-2)}
+.card .frame{position:relative;background:#0a0c10;border-bottom:1px solid var(--line)}
+.frame .chrome{display:flex;align-items:center;gap:7px;padding:11px 14px;border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,#10141a,#0c0f14)}
+.chrome .dot{width:9px;height:9px;border-radius:50%}
+.chrome .dot:nth-child(1){background:#ff5f57}.chrome .dot:nth-child(2){background:#febc2e}.chrome .dot:nth-child(3){background:#28c840}
+.chrome .url{flex:1;margin-left:8px;height:18px;border-radius:6px;background:#070a0d;border:1px solid var(--line);
+  display:flex;align-items:center;padding:0 9px;font-family:var(--mono);font-size:9.5px;color:var(--muted-2);overflow:hidden;white-space:nowrap}
+.frame .stage{position:relative;aspect-ratio:3/2;background:#0a0c10;overflow:hidden}
+.frame .stage img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .6s var(--ease)}
+.frame .stage img.loaded{opacity:1}
+.frame .stage .overlay{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to top,rgba(8,9,12,.34),transparent 42%)}
+
+/* loading / error states */
+.state{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;text-align:center;padding:20px}
+.skeleton{position:absolute;inset:0;background:linear-gradient(110deg,#0c0f14 8%,#141922 18%,#0c0f14 33%);
+  background-size:220% 100%;animation:shimmer 1.5s linear infinite}
+@keyframes shimmer{to{background-position:-220% 0}}
+.spinner{width:34px;height:34px;border-radius:50%;border:2.5px solid var(--line-2);
+  border-top-color:var(--accent);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.state .stxt{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.state .serr{font-size:13px;color:var(--danger);max-width:28ch}
+
+/* view toggle + regen */
+.frame .controls{position:absolute;top:46px;right:12px;display:flex;gap:8px;z-index:3}
+.seg{display:flex;background:rgba(8,10,14,.72);backdrop-filter:blur(8px);border:1px solid var(--line-2);
+  border-radius:100px;padding:3px}
+.seg button{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  padding:5px 11px;border:none;background:transparent;color:var(--muted);border-radius:100px;cursor:pointer;transition:.2s}
+.seg button.on{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.iconbtn{width:30px;height:30px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+  background:rgba(8,10,14,.72);backdrop-filter:blur(8px);border:1px solid var(--line-2);color:var(--muted);
+  cursor:pointer;transition:.2s}
+.iconbtn:hover{color:var(--text);border-color:var(--accent);transform:rotate(-40deg)}
+.iconbtn svg{width:14px;height:14px}
+
+.card .body{padding:22px 22px 24px}
+.card .kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.card .name{font-family:var(--serif);font-size:27px;font-weight:500;letter-spacing:-.01em;margin:9px 0 11px}
+.card .desc{color:var(--muted);font-size:14px;line-height:1.65;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card .desc.open{-webkit-line-clamp:unset}
+.card .more{background:none;border:none;color:var(--accent);font-family:var(--mono);font-size:10px;
+  letter-spacing:.1em;text-transform:uppercase;cursor:pointer;padding:6px 0 0;display:inline-block}
+
+.tags{display:flex;flex-wrap:wrap;gap:7px;margin:15px 0 18px}
+.tags .tag{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--muted);
+  border:1px solid var(--line);background:rgba(255,255,255,.02);padding:5px 10px;border-radius:7px}
+
+.card .export{width:100%;padding:13px;color:var(--accent-ink);
+  background:linear-gradient(135deg,var(--accent-bright),var(--accent-deep));border-radius:var(--r-md);
+  font-weight:600;font-size:12px;letter-spacing:.12em;text-transform:uppercase;box-shadow:0 8px 22px -10px rgba(67,184,240,.6)}
+.card .export:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px rgba(67,184,240,.7)}
+.card .export:active{transform:scale(.99)}
+.card .export:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+
+/* prompt disclosure */
+.prompt{margin-top:18px;border-top:1px solid var(--line);padding-top:16px}
+.prompt .phead{display:flex;align-items:center;justify-content:space-between;width:100%;background:none;
+  border:none;cursor:pointer;color:var(--text);padding:0}
+.prompt .phead .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.prompt .phead .chev{width:14px;height:14px;color:var(--muted);transition:transform .3s var(--ease)}
+.prompt.open .phead .chev{transform:rotate(180deg)}
+.prompt .pbody{max-height:0;overflow:hidden;transition:max-height .4s var(--ease)}
+.prompt.open .pbody{max-height:900px}
+.ptag{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:16px 0 7px}
+.pcode{position:relative;font-family:var(--mono);font-size:11.5px;line-height:1.7;color:#aeb6c1;
+  background:#070a0d;border:1px solid var(--line);border-radius:var(--r-sm);padding:13px 14px;white-space:pre-wrap;word-break:break-word}
+.copy{margin-top:12px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  background:transparent;border:1px solid var(--line-2);color:var(--muted);padding:8px 14px;border-radius:8px;cursor:pointer;transition:.2s}
+.copy:hover{border-color:var(--accent);color:var(--text)}
+
+/* footer */
+.foot{border-top:1px solid var(--line);padding:28px 0;display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:16px;color:var(--muted-2);font-family:var(--mono);font-size:11px;letter-spacing:.06em}
+.foot .danger-link{background:none;border:none;color:var(--muted-2);font-family:var(--mono);font-size:11px;
+  letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:.2s}
+.foot .danger-link:hover{color:var(--danger)}
+
+/* toast */
+.toast-wrap{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);z-index:60;display:flex;flex-direction:column;gap:10px;align-items:center}
+.toast{background:var(--panel-3);border:1px solid var(--line-2);border-radius:12px;padding:13px 20px;
+  font-size:13px;color:var(--text);box-shadow:0 20px 50px -16px rgba(0,0,0,.9);display:flex;align-items:center;gap:11px;
+  opacity:0;transform:translateY(14px);animation:toastIn .4s var(--ease) forwards}
+.toast.out{animation:toastOut .35s var(--ease) forwards}
+.toast .tdot{width:8px;height:8px;border-radius:50%;flex:none}
+.toast.ok .tdot{background:var(--ok);box-shadow:0 0 10px var(--ok)}
+.toast.err .tdot{background:var(--danger);box-shadow:0 0 10px var(--danger)}
+.toast.info .tdot{background:var(--accent);box-shadow:0 0 10px var(--accent)}
+@keyframes toastIn{to{opacity:1;transform:none}}
+@keyframes toastOut{to{opacity:0;transform:translateY(14px)}}
+
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+</style>
+</head>
+<body>
+<div class="bg-layer"></div>
+<div class="grain"></div>
+
+<div class="wrap">
+  <!-- top bar -->
+  <header class="topbar">
+    <div class="left">
+      <a class="backlink" href="index.html" aria-label="Back to Tester.io">
+        <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <span class="txt">Tester.io</span>
+      </a>
+      <div class="brandmark">
+        <svg class="spark" viewBox="0 0 24 24" fill="none"><path d="M12 2l1.6 7.4L21 11l-7.4 1.6L12 20l-1.6-7.4L3 11l7.4-1.6z" fill="currentColor"/></svg>
+        FrontEnd
+      </div>
+    </div>
+    <div class="meta" id="status-pill">kie.ai · gpt-4o image</div>
+  </header>
+
+  <!-- hero / brief -->
+  <section class="hero" id="brief">
+    <div class="display">
+      <h1>
+        <span class="hero-reveal d1">Mood</span>
+        <span class="hero-reveal d2">Board</span>
+        <span class="ghost hero-reveal d3">Generator</span>
+      </h1>
+      <div class="directions hero-reveal d4">
+        <div class="row"><span class="num">01</span><span class="label">Minimalist</span></div>
+        <div class="row"><span class="num">02</span><span class="label">Contemporary</span></div>
+        <div class="row"><span class="num">03</span><span class="label">Dynamic</span></div>
+      </div>
+      <p class="poweredby hero-reveal d5">Powered by kie.ai · GPT-4o Image</p>
+    </div>
+
+    <div class="panel hero-reveal d3">
+      <div class="panel-head">Design Brief</div>
+      <p class="panel-sub">Describe your website — we'll generate <strong style="color:var(--text);font-weight:600">6 concepts</strong> across 3 style directions with live AI homepage mockups.</p>
+
+      <div class="field" id="f-idea">
+        <div class="lbl"><span>Website Concept</span><span class="hint req">Required</span></div>
+        <textarea id="in-idea" placeholder="e.g. A community platform for Filipino divers to share spots and trips"></textarea>
+      </div>
+      <div class="field" id="f-theme">
+        <div class="lbl"><span>Visual Theme</span><span class="hint req">Required</span></div>
+        <input id="in-theme" type="text" placeholder="e.g. ocean, adventure, tropical, dark teal" />
+      </div>
+      <div class="field" id="f-products">
+        <div class="lbl"><span>Key Sections</span><span class="hint">Optional</span></div>
+        <input id="in-products" type="text" placeholder="e.g. Hero, Community Feed, Events, Map" />
+      </div>
+      <div class="field" id="f-model">
+        <div class="lbl"><span>Image Model</span><span class="hint">kie.ai</span></div>
+        <div class="select-wrap">
+          <select id="in-model" aria-label="Image generation model">
+            <option value="gpt4o">GPT-4o Image — best text rendering (~6 cr/img)</option>
+            <option value="nano-banana">Nano Banana — fastest &amp; cheapest (~4 cr/img)</option>
+            <option value="nano-banana-2">Nano Banana 2 — 4K, sharp text (~8 cr/img)</option>
+          </select>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="model-note" id="model-note"></div>
+      </div>
+
+      <button class="btn btn-primary" id="btn-generate">
+        <svg class="ic" viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 6.2L20 11l-6.2 1.8L12 19l-1.8-6.2L4 11l6.2-1.8z" fill="currentColor"/></svg>
+        Generate Moodboard
+      </button>
+      <button class="btn btn-ghost" id="btn-test">
+        <svg class="ic" viewBox="0 0 24 24" fill="none"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" fill="currentColor"/></svg>
+        Test API Connection
+      </button>
+      <div class="form-msg" id="form-msg" role="status"></div>
+    </div>
+  </section>
+
+  <!-- results -->
+  <section class="results" id="results" aria-live="polite">
+    <div class="results-top">
+      <div class="title">Your Concepts</div>
+      <div class="count"><span class="dot"></span><span id="count-text">6 Concepts</span></div>
+    </div>
+    <div id="cat-container"></div>
+  </section>
+
+  <!-- footer -->
+  <footer class="foot">
+    <span>Mood Board Generator — 6 homepage directions, not a finished site.</span>
+    <button class="danger-link" id="btn-clear">⌫ Clear Saved Data</button>
+  </footer>
+</div>
+
+<div class="toast-wrap" id="toasts"></div>
+
+<script>
+"use strict";
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+const sleep = (ms)=>new Promise(r=>setTimeout(r,ms));
+const kebab = (s)=>s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+const esc = (s)=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+const LS = { inputs:'frontend.inputs.v1', concepts:'frontend.concepts.v1' };
+
+/* ---- image models (must match serve.mjs MODELS) ---- */
+const MODEL_META = {
+  'gpt4o':         { label:'GPT-4o Image',  perImg:6,  note:'OpenAI GPT-4o — strongest at rendering crisp, readable UI text.' },
+  'nano-banana':   { label:'Nano Banana',   perImg:4,  note:'Google Gemini 2.5 Flash — fastest & cheapest; great speed, lighter on fine text.' },
+  'nano-banana-2': { label:'Nano Banana 2', perImg:8,  note:'Google Gemini 3 Flash — 4K output with sharp text; pricier per image.' },
+};
+const getModel = ()=> MODEL_META[$('#in-model').value] ? $('#in-model').value : 'gpt4o';
+function updateModelUI(){
+  const m=getModel(), meta=MODEL_META[m];
+  $('#model-note').innerHTML = `<b>${esc(meta.label)}</b> · ~${meta.perImg} cr/image · full moodboard ≈ ${meta.perImg*12} cr. ${esc(meta.note)}`;
+  $('.poweredby').textContent = `Powered by kie.ai · ${meta.label}`;
+}
+
+/* ---- the 6 fixed directions (2 per category) ---- */
+const BLUEPRINT = [
+  { category:'Minimalist', name:'Pure Form',
+    traits:'clean, whitespace-forward, restrained palette — a single accent, refined serif headings and hairline dividers' },
+  { category:'Minimalist', name:'White Silence',
+    traits:'clean and whitespace-forward with a restrained palette, vast negative space, light airy surfaces and delicate type' },
+  { category:'Contemporary', name:'Soft Modern',
+    traits:'modern design trends, expressive but professional — soft gradient washes, rounded cards and a friendly geometric sans' },
+  { category:'Contemporary', name:'Studio Edit',
+    traits:'modern design trends, expressive but professional — a tactile editorial-studio look with a confident mixed type scale and lifestyle imagery' },
+  { category:'Dynamic', name:'Bold Pulse',
+    traits:'high contrast, bold typography and visually striking layouts — confident color blocking and energetic calls-to-action' },
+  { category:'Dynamic', name:'High Voltage',
+    traits:'high contrast, bold typography and visually striking layouts — dramatic scale, vivid accents and a charged, kinetic composition' },
+];
+
+const TAGS = {
+  'Pure Form':['Clean','Whitespace-forward','Restrained palette'],
+  'White Silence':['Clean','Whitespace-forward','Restrained palette'],
+  'Soft Modern':['Modern trends','Expressive','Professional'],
+  'Studio Edit':['Modern trends','Expressive','Professional'],
+  'Bold Pulse':['High contrast','Bold typography','Striking layout'],
+  'High Voltage':['High contrast','Bold typography','Striking layout'],
+};
+
+let concepts = [];
+
+/* ---------- prompt + description builders ---------- */
+function frontPrompt(c, inp){
+  return `Ultra-detailed, high-fidelity homepage UI design mockup for a real, production-ready website about ${inp.idea}. `+
+    `Visual theme: ${inp.theme}. Key sections: ${inp.products}. `+
+    `Design direction: ${c.category} — concept "${c.name}". Style: ${c.traits}. `+
+    `Show a complete desktop homepage as seen in a browser: top navigation bar with a logo and menu links, a large hero section with a clear real headline and a primary call-to-action button, then 2-3 supporting content sections. `+
+    `Realistic modern web design, pixel-perfect UI, crisp legible English headings and copy (absolutely no lorem ipsum, no gibberish text), clean alignment and spacing, professional product/web design, shown straight-on in a desktop viewport, 4k, sharp, photoreal UI render.`;
+}
+function backPrompt(c, inp){
+  return `Ultra-detailed, high-fidelity UI design mockup of the INNER content sections for the same real website about ${inp.idea}, visually consistent with its homepage. `+
+    `Visual theme: ${inp.theme}. Sections: ${inp.products}. `+
+    `Design direction: ${c.category} — concept "${c.name}". Style: ${c.traits}. `+
+    `Show a vertical stack of desktop sections: a feature/benefits grid with icons, a gallery or product showcase, a stats or testimonial band, and a footer with navigation links and newsletter. `+
+    `Realistic modern web design, consistent type and color with the homepage, legible English copy (no lorem ipsum), professional UI, desktop viewport, 4k, sharp, photoreal UI render.`;
+}
+function describe(c, inp){
+  const idea = inp.idea.replace(/\.$/,'');
+  const map = {
+    'Pure Form':`A stripped-back homepage for ${idea}. Clean and whitespace-forward, a single restrained accent drawn from "${inp.theme}" and a calm serif-led hierarchy let ${inp.products||'the core sections'} breathe — every element earns its place.`,
+    'White Silence':`The quietest expression of ${idea}. A restrained near-white palette, vast negative space and hairline rules turn the hero into a moment of stillness, with ${inp.products||'each section'} arranged with gallery-like calm.`,
+    'Soft Modern':`A modern, on-trend take on ${idea}. Soft gradient washes from the "${inp.theme}" palette, rounded cards and a friendly geometric sans feel current and expressive while staying professional across ${inp.products||'the page'}.`,
+    'Studio Edit':`A contemporary editorial-studio direction for ${idea}. Tactile surfaces, a confident mixed type scale and lifestyle imagery rooted in "${inp.theme}" give ${inp.products||'the homepage'} an expressive yet professional personality.`,
+    'Bold Pulse':`A high-contrast, high-energy direction for ${idea}. Bold typography, striking color blocking from "${inp.theme}" and punchy calls-to-action make ${inp.products||'the homepage'} impossible to ignore.`,
+    'High Voltage':`A visually striking, kinetic take on ${idea}. Dramatic scale, vivid "${inp.theme}" accents and high-contrast bold type turn ${inp.products||'the sections'} into a charged, attention-grabbing layout.`,
+  };
+  return map[c.name] || `${c.category} direction for ${idea}.`;
+}
+
+/* ---------- toast ---------- */
+function toast(msg, kind='info', ms=3200){
+  const wrap = $('#toasts');
+  const el = document.createElement('div');
+  el.className = `toast ${kind}`;
+  el.innerHTML = `<span class="tdot"></span><span>${esc(msg)}</span>`;
+  wrap.appendChild(el);
+  setTimeout(()=>{ el.classList.add('out'); setTimeout(()=>el.remove(),350); }, ms);
+}
+
+/* ---------- persistence ---------- */
+function saveAll(){
+  try{
+    localStorage.setItem(LS.concepts, JSON.stringify(concepts));
+    localStorage.setItem(LS.inputs, JSON.stringify(readInputs()));
+  }catch(e){}
+}
+function readInputs(){
+  return { idea:$('#in-idea').value.trim(), theme:$('#in-theme').value.trim(), products:$('#in-products').value.trim(), model:getModel() };
+}
+function hydrate(){
+  try{
+    const inp = JSON.parse(localStorage.getItem(LS.inputs)||'null');
+    if(inp){ $('#in-idea').value=inp.idea||''; $('#in-theme').value=inp.theme||''; $('#in-products').value=inp.products||'';
+      if(inp.model && MODEL_META[inp.model]) $('#in-model').value=inp.model; }
+    updateModelUI();
+    const saved = JSON.parse(localStorage.getItem(LS.concepts)||'null');
+    if(saved && Array.isArray(saved) && saved.length){
+      concepts = saved;
+      renderResults();
+      // resume any unfinished generations
+      concepts.forEach(c=>{ if(c.status!=='done') runConcept(c); });
+    }
+  }catch(e){}
+}
+
+/* ---------- generation ---------- */
+async function generateImage(prompt, model, size='3:2'){
+  const res = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt,size,model})});
+  const j = await res.json();
+  if(!j.ok || !j.taskId) throw new Error(j.error||'Failed to start generation');
+  const taskId = j.taskId;
+  const started = Date.now();
+  while(Date.now()-started < 180000){
+    await sleep(2600);
+    let jj;
+    try{ jj = await (await fetch('/api/record?taskId='+encodeURIComponent(taskId)+'&model='+encodeURIComponent(model))).json(); }
+    catch(e){ continue; }
+    if(jj.status==='success' && jj.urls && jj.urls.length) return jj.urls[0];
+    if(jj.status==='failed') throw new Error(jj.error||'Generation failed');
+  }
+  throw new Error('Timed out waiting for image');
+}
+
+async function runConcept(c){
+  const model = (c.model && MODEL_META[c.model]) ? c.model : getModel();
+  c.model = model;
+  c.status='generating'; c.error=null; updateCard(c);
+  try{
+    const [front, back] = await Promise.all([
+      c.frontUrl ? Promise.resolve(c.frontUrl) : generateImage(c.frontPrompt,model,'3:2'),
+      c.backUrl  ? Promise.resolve(c.backUrl)  : generateImage(c.backPrompt,model,'3:2'),
+    ]);
+    c.frontUrl=front; c.backUrl=back; c.status='done'; c.error=null;
+  }catch(e){
+    c.status='error'; c.error=e.message||'Generation failed';
+  }
+  saveAll(); updateCard(c);
+}
+
+// limited-concurrency pool so we render progressively & respect rate limits
+async function runPool(items, worker, size=3){
+  const queue=[...items]; const runners=[];
+  for(let i=0;i<Math.min(size,queue.length);i++){
+    runners.push((async()=>{ while(queue.length){ await worker(queue.shift()); } })());
+  }
+  await Promise.all(runners);
+}
+
+async function generateAll(){
+  const inp = readInputs();
+  let bad=false;
+  [['#f-idea',inp.idea],['#f-theme',inp.theme]].forEach(([sel,v])=>{
+    const f=$(sel); if(!v){ f.classList.add('err'); bad=true; } else f.classList.remove('err');
+  });
+  if(bad){ setMsg('Website concept and visual theme are required.','err'); return; }
+  if(!inp.products) inp.products='Hero, Features, Gallery, About, Contact';
+  setMsg('','');
+
+  const model = getModel(), meta = MODEL_META[model], needed = meta.perImg*12;
+  // low-balance guard (generation = 12 images: 6 concepts x front+back)
+  if(creditBalance!==null && creditBalance < needed){
+    const go = confirm(`Your kie.ai balance is ${Number(creditBalance).toFixed(2)} credits.\n\nA full moodboard with ${meta.label} needs ~${needed} credits (12 images × ~${meta.perImg}). It will likely fail with "Credits insufficient" until you top up at kie.ai.\n\nGenerate anyway?`);
+    if(!go){ setMsg('Generation cancelled — top up credits at kie.ai first.','info'); return; }
+  }
+
+  concepts = BLUEPRINT.map((b,i)=>({
+    id:'c'+(i+1), n:i+1, category:b.category, name:b.name, traits:b.traits, model,
+    tags:TAGS[b.name]||[], description:describe(b,inp),
+    frontPrompt:frontPrompt(b,inp), backPrompt:backPrompt(b,inp),
+    frontUrl:null, backUrl:null, view:'front', status:'queued', error:null, descOpen:false, promptOpen:false,
+  }));
+  saveAll();
+  renderResults();
+  $('#results').scrollIntoView({behavior:'smooth',block:'start'});
+
+  const btn=$('#btn-generate'); btn.disabled=true;
+  toast('Generating 6 concepts — images stream in as they finish.','info',4200);
+  await runPool(concepts, runConcept, 3);
+  btn.disabled=false;
+  refreshCredits();
+  const done=concepts.filter(c=>c.status==='done').length;
+  toast(`${done}/6 concepts ready.`, done===6?'ok':'info');
+}
+
+/* ---------- rendering ---------- */
+function renderResults(){
+  $('#results').classList.add('show');
+  const order=['Minimalist','Contemporary','Dynamic'];
+  const labelNum={'Minimalist':'01','Contemporary':'02','Dynamic':'03'};
+  const container=$('#cat-container'); container.innerHTML='';
+  order.forEach(cat=>{
+    const inCat=concepts.filter(c=>c.category===cat);
+    if(!inCat.length) return;
+    const block=document.createElement('div'); block.className='cat-block';
+    block.innerHTML=`
+      <div class="cat-head">
+        <div class="bignum">${labelNum[cat]}</div>
+        <div class="ctext">
+          <span class="badge"><span class="gem"></span>${esc(cat)}</span>
+          <span class="cname">${esc(cat.split(' / ')[0])}</span>
+        </div>
+      </div>
+      <div class="grid" id="grid-${kebab(cat)}"></div>`;
+    container.appendChild(block);
+    const grid=$('#grid-'+kebab(cat),block);
+    inCat.forEach((c,idx)=>{ const el=cardEl(c); el.style.animationDelay=(idx*0.08)+'s'; grid.appendChild(el); });
+  });
+}
+
+function cardEl(c){
+  const el=document.createElement('article');
+  el.className='card'; el.id='card-'+c.id;
+  el.innerHTML=cardInner(c);
+  bindCard(el,c);
+  return el;
+}
+
+function cardInner(c){
+  const num=String(c.n).padStart(2,'0');
+  return `
+  <div class="frame">
+    <div class="chrome">
+      <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      <span class="url">${esc(kebab(c.name))}.preview / ${c.view}</span>
+    </div>
+    <div class="controls">
+      <div class="seg" data-seg>
+        <button data-view="front" class="${c.view==='front'?'on':''}">Front</button>
+        <button data-view="back" class="${c.view==='back'?'on':''}">Back</button>
+      </div>
+      <button class="iconbtn" data-regen title="Regenerate this concept" aria-label="Regenerate">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+      </button>
+    </div>
+    <div class="stage" data-stage>${stageInner(c)}</div>
+    <div class="overlay"></div>
+  </div>
+  <div class="body">
+    <div class="kicker">${num} · ${esc(c.category)}</div>
+    <h3 class="name">${esc(c.name)}</h3>
+    <p class="desc" data-desc>${esc(c.description)}</p>
+    <button class="more" data-morebtn>Read more</button>
+    <div class="tags">${c.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>
+    <button class="btn export" data-export ${c.status!=='done'?'disabled':''}>
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+      Export as HTML
+    </button>
+    <div class="prompt" data-prompt>
+      <button class="phead" data-phead>
+        <span class="lbl">Image Prompt</span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="pbody">
+        <div class="ptag">Model</div>
+        <div class="pcode" data-model-line>${esc((MODEL_META[c.model]||MODEL_META['gpt4o']).label)}</div>
+        <div class="ptag">Front Image Prompt · Homepage Layout</div>
+        <div class="pcode" data-front-prompt>${esc(c.frontPrompt)}</div>
+        <div class="ptag">Back Image Prompt · Inner Sections / Supporting Visuals</div>
+        <div class="pcode" data-back-prompt>${esc(c.backPrompt)}</div>
+        <button class="copy" data-copy>Copy prompts</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function stageInner(c){
+  const url = c.view==='front' ? c.frontUrl : c.backUrl;
+  if(c.status==='error'){
+    return `<div class="state"><div class="stxt" style="color:var(--danger)">Generation failed</div>
+      <div class="serr">${esc(c.error||'Something went wrong')}</div>
+      <button class="copy" data-retry style="margin-top:4px">↻ Retry</button></div>`;
+  }
+  if(url){
+    return `<img src="${esc(url)}" alt="${esc(c.name)} ${c.view} mockup" onload="this.classList.add('loaded')" />`;
+  }
+  // generating / queued
+  return `<div class="skeleton"></div><div class="state"><div class="spinner"></div>
+    <div class="stxt">${c.status==='queued'?'Queued…':'Generating mockup…'}</div></div>`;
+}
+
+function updateCard(c){
+  const el=$('#card-'+c.id); if(!el) return;
+  // refresh stage
+  $('[data-stage]',el).innerHTML=stageInner(c);
+  // refresh url label
+  const u=$('.url',el); if(u) u.textContent=`${kebab(c.name)}.preview / ${c.view}`;
+  // export enable
+  const ex=$('[data-export]',el); if(ex) ex.disabled=(c.status!=='done');
+  // seg active
+  $$('[data-seg] button',el).forEach(b=>b.classList.toggle('on',b.dataset.view===c.view));
+  bindStage(el,c);
+}
+
+/* ---------- card interactions ---------- */
+function bindCard(el,c){
+  $$('[data-seg] button',el).forEach(b=>b.addEventListener('click',()=>{
+    c.view=b.dataset.view; updateCard(c);
+  }));
+  $('[data-regen]',el).addEventListener('click',()=>{
+    c.frontUrl=null; c.backUrl=null; c.status='queued'; c.error=null; updateCard(c); runConcept(c);
+    toast(`Regenerating "${c.name}"…`,'info');
+  });
+  $('[data-morebtn]',el).addEventListener('click',(e)=>{
+    const d=$('[data-desc]',el); d.classList.toggle('open');
+    e.target.textContent=d.classList.contains('open')?'Show less':'Read more';
+  });
+  // hide "read more" if text not clamped
+  requestAnimationFrame(()=>{ const d=$('[data-desc]',el); const mb=$('[data-morebtn]',el);
+    if(d.scrollHeight<=d.clientHeight+2) mb.style.display='none'; });
+  $('[data-export]',el).addEventListener('click',()=>exportCard(c));
+  $('[data-phead]',el).addEventListener('click',()=>{ $('[data-prompt]',el).classList.toggle('open'); });
+  $('[data-copy]',el).addEventListener('click',()=>{
+    navigator.clipboard.writeText(`FRONT:\n${c.frontPrompt}\n\nBACK:\n${c.backPrompt}`)
+      .then(()=>toast('Prompts copied to clipboard','ok')).catch(()=>toast('Copy failed','err'));
+  });
+  bindStage(el,c);
+}
+function bindStage(el,c){
+  const r=$('[data-retry]',el);
+  if(r) r.addEventListener('click',()=>{ c.frontUrl=null;c.backUrl=null;c.status='queued';updateCard(c);runConcept(c); });
+}
+
+/* ---------- export as HTML ---------- */
+function exportCard(c){
+  if(c.status!=='done') return;
+  const num=String(c.n).padStart(2,'0');
+  const html = buildExportHTML(c,num);
+  const blob=new Blob([html],{type:'text/html'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=`concept-${num}-${kebab(c.name)}.html`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+  toast(`Exported concept-${num}-${kebab(c.name)}.html`,'ok');
+}
+
+function buildExportHTML(c,num){
+  const parts=[];
+  parts.push('<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">');
+  parts.push('<meta name="viewport" content="width=device-width,initial-scale=1">');
+  parts.push('<title>'+esc(c.name)+' — '+esc(c.category)+' Concept</title>');
+  parts.push('<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Hanken+Grotesk:wght@300;400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet">');
+  parts.push('<style>'+
+    ':root{--ink:#0d0f12;--bg:#0a0b0e;--pan:#13171d;--mut:#8b939f;--acc:#43b8f0;--line:rgba(255,255,255,.09)}'+
+    '*{margin:0;box-sizing:border-box}body{background:var(--bg);color:#eef1f5;font-family:"Hanken Grotesk",sans-serif;line-height:1.6}'+
+    '.wrap{max-width:1000px;margin:0 auto;padding:64px 28px}'+
+    '.kick{font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--acc)}'+
+    'h1{font-family:"Fraunces",serif;font-size:clamp(40px,7vw,76px);font-weight:500;letter-spacing:-.03em;margin:14px 0 18px;line-height:.95}'+
+    '.desc{color:var(--mut);font-size:18px;max-width:60ch;margin-bottom:14px}'+
+    '.tags{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 44px}'+
+    '.tag{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--mut);border:1px solid var(--line);padding:6px 12px;border-radius:8px}'+
+    '.shot{margin:0 0 30px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#0a0c10}'+
+    '.shot .bar{display:flex;gap:7px;padding:13px 16px;border-bottom:1px solid var(--line);background:#10141a}'+
+    '.shot .bar i{width:10px;height:10px;border-radius:50%;background:#333}'+
+    '.shot .cap{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);padding:14px 18px 0}'+
+    '.shot img{width:100%;display:block}'+
+    '.pblock{margin-top:40px;border-top:1px solid var(--line);padding-top:28px}'+
+    '.pl{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);margin:18px 0 8px}'+
+    '.pc{font-family:"JetBrains Mono",monospace;font-size:12.5px;line-height:1.7;color:#aeb6c1;background:#070a0d;border:1px solid var(--line);border-radius:12px;padding:16px;white-space:pre-wrap}'+
+    'footer{margin-top:50px;color:#5b626d;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.08em}'+
+  '</style></head><body><div class="wrap">');
+  parts.push('<div class="kick">Concept '+num+' · '+esc(c.category)+'</div>');
+  parts.push('<h1>'+esc(c.name)+'</h1>');
+  parts.push('<p class="desc">'+esc(c.description)+'</p>');
+  parts.push('<div class="tags">'+c.tags.map(t=>'<span class="tag">'+esc(t)+'</span>').join('')+'</div>');
+  if(c.frontUrl){
+    parts.push('<div class="shot"><div class="bar"><i></i><i></i><i></i></div><div class="cap">Front · Homepage Layout</div>'+
+      '<div style="padding:14px 18px 18px"><img src="'+esc(c.frontUrl)+'" alt="'+esc(c.name)+' homepage mockup"></div></div>');
+  }
+  if(c.backUrl){
+    parts.push('<div class="shot"><div class="bar"><i></i><i></i><i></i></div><div class="cap">Back · Inner Sections / Supporting Visuals</div>'+
+      '<div style="padding:14px 18px 18px"><img src="'+esc(c.backUrl)+'" alt="'+esc(c.name)+' inner sections mockup"></div></div>');
+  }
+  parts.push('<div class="pblock"><div class="pl">Front Image Prompt</div><div class="pc">'+esc(c.frontPrompt)+'</div>'+
+    '<div class="pl">Back Image Prompt</div><div class="pc">'+esc(c.backPrompt)+'</div></div>');
+  parts.push('<footer>Generated with Mood Board Generator · images via kie.ai ('+esc((MODEL_META[c.model]||MODEL_META['gpt4o']).label)+')</footer>');
+  parts.push('</div></body></html>');
+  return parts.join('');
+}
+
+/* ---------- test connection ---------- */
+async function testApi(){
+  const btn=$('#btn-test'); btn.disabled=true;
+  setMsg(`Pinging kie.ai (${MODEL_META[getModel()].label})…`,'info');
+  try{
+    const j = await (await fetch('/api/test',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:getModel()})})).json();
+    if(j.ok){ setMsg(`✓ Connected — ${MODEL_META[getModel()].label} key is valid.`,'ok'); toast('API connection OK','ok'); }
+    else { setMsg('✕ '+(j.error||'Connection failed'),'err'); toast('API test failed','err'); }
+  }catch(e){ setMsg('✕ Could not reach server. Is `node serve.mjs` running?','err'); }
+  btn.disabled=false;
+  refreshCredits();
+}
+
+function setMsg(t,kind){ const m=$('#form-msg'); m.textContent=t; m.className='form-msg '+(kind||''); }
+
+/* ---------- clear ---------- */
+function clearData(){
+  if(!confirm('Clear all saved inputs, prompts and generated concepts?')) return;
+  localStorage.removeItem(LS.inputs); localStorage.removeItem(LS.concepts);
+  concepts=[]; $('#cat-container').innerHTML=''; $('#results').classList.remove('show');
+  $('#in-idea').value=''; $('#in-theme').value=''; $('#in-products').value='';
+  setMsg('','');
+  toast('Saved data cleared','ok');
+  $('#brief').scrollIntoView({behavior:'smooth'});
+}
+
+/* ---------- wire up ---------- */
+$('#btn-generate').addEventListener('click',generateAll);
+$('#btn-test').addEventListener('click',testApi);
+$('#btn-clear').addEventListener('click',clearData);
+['in-idea','in-theme'].forEach(id=>$('#'+id).addEventListener('input',()=>$('#f-'+id.split('-')[1]).classList.remove('err')));
+$('#in-model').addEventListener('change',()=>{ updateModelUI(); saveAll(); });
+
+// check server/key status + live credit balance
+let creditBalance = null;
+async function refreshCredits(){
+  const pill=$('#status-pill');
+  try{
+    const h=await (await fetch('/api/health')).json();
+    if(h && !h.hasKey){ pill.textContent='⚠ no API key in .env'; pill.style.color='var(--danger)'; return; }
+    const c=await (await fetch('/api/credits')).json();
+    if(c && c.ok){
+      creditBalance=c.credits;
+      pill.textContent=`kie.ai · ${Number(c.credits).toFixed(2)} credits`;
+      pill.style.color = c.credits < 1 ? 'var(--danger)' : (c.credits < 6 ? '#d9a441' : 'var(--muted-2)');
+    } else {
+      pill.textContent='kie.ai · gpt-4o image';
+    }
+  }catch(e){ pill.textContent='⚠ server offline'; pill.style.color='var(--danger)'; }
+}
+refreshCredits();
+
+hydrate();
+</script>
+</body>
+</html>

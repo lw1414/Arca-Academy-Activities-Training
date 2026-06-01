@@ -553,6 +553,7 @@
   .cb-copy:hover{color:var(--gold-2);border-color:rgba(230,185,121,0.35);background:rgba(230,185,121,0.05)}
   .cb-copy.copied{color:#5dd06a;border-color:rgba(93,208,106,0.4)}
   .cb-body{margin:0;padding:22px 22px 26px;font-family:var(--mono);font-size:13.5px;line-height:1.85;color:#e6dfcc;overflow-x:auto}
+  .cb-body[hidden="false"]{display:block}
   .cb-body[hidden="true"]{display:none}
   .cb-body code{font-family:inherit;background:transparent;padding:0}
   .c-com{color:#5a5a5a;font-style:italic}
@@ -773,6 +774,41 @@
     box-shadow:0 10px 30px -14px rgba(230,185,121,0.5);
   }
 
+  /* Internal studio — in-house tool cards */
+  .studio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media (max-width:980px){.studio-grid{grid-template-columns:1fr 1fr}}
+  @media (max-width:680px){.studio-grid{grid-template-columns:1fr;gap:14px}}
+  .studio-card{
+    position:relative;display:flex;flex-direction:column;gap:13px;padding:30px 28px;min-height:280px;
+    background:linear-gradient(180deg,rgba(255,255,255,0.025),rgba(255,255,255,0));
+    border:1px solid var(--line);border-radius:20px;overflow:hidden;color:inherit;
+    transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .35s ease,box-shadow .35s ease;
+  }
+  .studio-card::after{
+    content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;
+    background:radial-gradient(440px 200px at 100% 0,rgba(230,185,121,0.10),transparent 70%);
+    transition:opacity .35s ease;
+  }
+  .studio-card:hover{transform:translateY(-3px);border-color:rgba(230,185,121,0.35);
+    box-shadow:0 24px 52px -26px rgba(230,185,121,0.32),0 10px 24px -16px rgba(0,0,0,0.7)}
+  .studio-card:hover::after{opacity:1}
+  .studio-card:focus-visible{outline:2px solid var(--gold-2);outline-offset:3px}
+  .studio-ic{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;
+    background:var(--gold-gradient);box-shadow:0 10px 24px -10px rgba(230,185,121,0.6),inset 0 1px 0 rgba(255,255,255,0.45)}
+  .studio-ic svg{width:23px;height:23px;color:#0c0700;stroke-width:2}
+  .studio-kicker{font-family:var(--mono);font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold-2)}
+  .studio-card h3{font-family:var(--serif);font-weight:300;font-size:28px;letter-spacing:-0.02em;line-height:1.1;margin:0;color:var(--ink)}
+  .studio-card h3 em{font-style:italic;background:var(--gold-gradient);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .studio-card p{font-size:13px;line-height:1.7;color:#9a9388;margin:0;font-weight:300;max-width:42ch}
+  .studio-meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+    font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#7a7468;
+    border-top:1px solid var(--hair);padding-top:14px;margin-top:6px}
+  .studio-meta i{font-style:normal;color:#3a3a3a}
+  .studio-card .go{margin-top:auto;display:inline-flex;align-items:center;gap:9px;
+    font-family:var(--mono);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold-2)}
+  .studio-card .go i{font-style:normal;transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+  .studio-card:hover .go i{transform:translateX(4px)}
+
   /* Tester Tech section */
   #testertech .tt-grid{
     display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
@@ -976,6 +1012,7 @@
     <li><a href="#workflow">Workflow</a></li>
     <li><a href="#reports">Reports</a></li>
     <li><a href="#products">Products</a></li>
+    <li><a href="#studio">Studio</a></li>
     <li><a href="#pricing">Pricing</a></li>
     <li><a href="customers.html">Customers</a></li>
     <li><a href="changelog.html">Changelog</a></li>
@@ -1541,6 +1578,49 @@ function submitForm(e) {
         <a class="product-cta alt" href="contact.html?ref=tester-hub">Join early access →</a>
       </div>
     </article>
+  </div>
+</section>
+
+<!-- Divider -->
+<div class="divider-word"><em>studio.</em></div>
+
+<!-- Internal Studio — in-house tools (Concept Studio + Trend Finder) -->
+<section class="show" id="studio">
+  <div class="sec-head">
+    <span class="sec-num">Internal studio</span>
+    <div>
+      <h2 class="sec-title">Tools we built <em>for ourselves.</em></h2>
+      <p class="sec-lede">Small, sharp utilities the team uses in-house — now part of the platform. The same eye for craft we bring to QA, pointed at the work before the work.</p>
+    </div>
+  </div>
+
+  <div class="studio-grid reveal">
+    <a class="studio-card" href="FrontendGen.html">
+      <span class="studio-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 6.2L20 11l-6.2 1.8L12 19l-1.8-6.2L4 11l6.2-1.8z"/></svg></span>
+      <span class="studio-kicker">Concept Studio</span>
+      <h3>Mockups <em>before the build.</em></h3>
+      <p>Describe a product and get six AI homepage directions across three visual styles — a fast way to explore a look before a line of code ships.</p>
+      <span class="studio-meta"><span>6 concepts</span><i>·</i><span>GPT-4o · Nano Banana</span></span>
+      <span class="go">Open concept studio <i>→</i></span>
+    </a>
+
+    <a class="studio-card" href="TrendFinder.html">
+      <span class="studio-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="15 7 21 7 21 13"/></svg></span>
+      <span class="studio-kicker">Trend Finder</span>
+      <h3>What's <em>trending,</em> first.</h3>
+      <p>Search Google News, Reddit &amp; Hacker News, extract the idea lists inside each article with Gemini, pick what matters, and export to CSV.</p>
+      <span class="studio-meta"><span>3 sources</span><i>·</i><span>Gemini · CSV export</span></span>
+      <span class="go">Open trend finder <i>→</i></span>
+    </a>
+
+    <a class="studio-card" href="YouTubeAnalyst.html">
+      <span class="studio-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="4"/><path d="M10 9l5 3-5 3z"/></svg></span>
+      <span class="studio-kicker">YouTube Analyst</span>
+      <h3>Read the <em>room,</em> first.</h3>
+      <p>Analyze trending videos by region, channel &amp; keyword, then auto-build a Sheets + Slides report and email it — in one run.</p>
+      <span class="studio-meta"><span>Trends → report</span><i>·</i><span>Sheets · Slides · Email</span></span>
+      <span class="go">Open youtube analyst <i>→</i></span>
+    </a>
   </div>
 </section>
 

@@ -1,7 +1,27 @@
 node_modules/
-.env
-.env.local
-.env.*.local
+temporary screenshots/
 briefing/preview.html
 test-results/
 playwright-report/
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.local
+.env.*.local
+service-account.json
+*-service-account.json
+
+# OAuth / API credentials (YouTube Analyst + others) — never commit
+credentials.json
+token.json
+**/credentials.json
+**/token.json
+
+# Tool run scratch
+.tmp/
+**/.tmp/
+**/__pycache__/
+.venv/
+**/.venv/

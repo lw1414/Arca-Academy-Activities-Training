@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Trend Finder — trend research system</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Montserrat:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#000; --surface:#0b0b0c; --surface-2:#101012; --ink:#f6f1e6; --muted:#9a9388; --faint:#6a6a6a;
+    --line:rgba(255,255,255,0.08); --line-soft:rgba(255,255,255,0.05);
+    --gold-1:#C6A559; --gold-2:#E6B979; --gold-deep:#8a6f33; --on-gold:#0c0700;
+    --accent:linear-gradient(135deg,#E6B979 0%,#C6A559 100%);
+    --shadow-sm:0 2px 10px rgba(0,0,0,0.5);
+    --shadow-md:0 22px 50px -22px rgba(230,185,121,0.28),0 8px 20px -12px rgba(0,0,0,0.7);
+    --disp:'Fraunces', 'Times New Roman', serif; --sans:'Montserrat', system-ui, sans-serif; --mono:'JetBrains Mono', ui-monospace, monospace;
+    --radius:16px; --warn-bg:rgba(230,185,121,0.07); --warn-line:rgba(230,185,121,0.4); --warn-ink:#e6c98a;
+    --gutter:28px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased;font-feature-settings:"ss01","ss02","cv11";overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  button{font-family:var(--sans);cursor:pointer}
+  ::selection{background:var(--gold-2);color:#0c0700}
+  /* film grain — matches tester.io */
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:100;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");}
+
+  /* layout: main + right panel */
+  .app{display:grid;grid-template-columns:1fr 380px;gap:0;min-height:100vh}
+  @media (max-width:980px){.app{grid-template-columns:1fr}}
+
+  header.bar{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 28px;
+    border-bottom:1px solid var(--line);backdrop-filter:blur(12px) saturate(120%);
+    background:linear-gradient(180deg,rgba(0,0,0,0.72),rgba(0,0,0,0.3));position:sticky;top:0;z-index:30}
+  .bar-left{display:flex;align-items:center;gap:18px;min-width:0}
+  .brand{display:flex;align-items:center;gap:12px;font-family:var(--disp);font-weight:400;font-size:19px;letter-spacing:-0.01em}
+  .brand em{font-style:italic;background:var(--accent);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .brand .mark{width:34px;height:34px;border-radius:10px;background:var(--accent);display:grid;place-items:center;
+    box-shadow:0 8px 22px -8px rgba(230,185,121,0.6),inset 0 1px 0 rgba(255,255,255,0.4)}
+  .brand .mark svg{width:17px;height:17px;stroke:var(--on-gold);stroke-width:2.6;fill:none}
+  /* back to tester.io */
+  .backlink{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:10.5px;letter-spacing:0.18em;
+    text-transform:uppercase;color:var(--muted);padding:9px 15px 9px 12px;border:1px solid var(--line);border-radius:999px;
+    transition:color .25s cubic-bezier(.2,.8,.2,1),border-color .25s ease,background .25s ease}
+  .backlink .arr{width:14px;height:14px;stroke:var(--gold-2);stroke-width:2;fill:none;transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+  .backlink:hover{color:var(--ink);border-color:rgba(230,185,121,0.45);background:rgba(230,185,121,0.06)}
+  .backlink:hover .arr{transform:translateX(-3px)}
+  .backlink:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(230,185,121,0.35);border-color:var(--gold-2)}
+  .backlink:active{transform:scale(.98)}
+  @media(max-width:560px){.backlink .txt{display:none}.backlink{padding:9px 11px}}
+  .badge{font-family:var(--mono);font-size:10.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);
+    display:inline-flex;align-items:center;gap:8px;padding:8px 13px;border-radius:999px;background:var(--surface);border:1px solid var(--line)}
+  .badge .dot{width:7px;height:7px;border-radius:50%;background:#5bd6a0;box-shadow:0 0 8px #5bd6a0}
+  .badge.off .dot{background:#f06a5a;box-shadow:0 0 8px #f06a5a}
+
+  .main{padding:38px 28px 60px}
+  .eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:0.32em;text-transform:uppercase;color:var(--gold-2);
+    display:flex;align-items:center;gap:10px;margin:0 0 18px}
+  .eyebrow::before{content:"";width:24px;height:1px;background:var(--gold-2)}
+  h1{font-family:var(--disp);font-weight:300;letter-spacing:-0.03em;line-height:1.02;font-size:clamp(30px,4.6vw,52px);margin:0 0 12px}
+  h1 em{font-style:italic;background:var(--accent);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--muted);margin:0 0 30px;font-weight:300;max-width:58ch;line-height:1.7;font-size:14.5px}
+
+  .search{display:flex;gap:10px;align-items:center;max-width:680px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 7px 7px 22px;box-shadow:var(--shadow-md)}
+  .search svg.lens{width:19px;height:19px;stroke:var(--faint);stroke-width:2;fill:none;flex:none}
+  .search input{flex:1;min-width:0;border:none;background:transparent;outline:none;font-size:15px;padding:13px 4px;color:var(--ink);font-family:var(--sans)}
+  .search input::placeholder{color:var(--faint)}
+  .search button{flex:none;border:none;color:var(--on-gold);font-weight:600;font-size:12px;letter-spacing:0.16em;text-transform:uppercase;background:var(--accent);padding:13px 26px;border-radius:999px;box-shadow:0 10px 26px -12px rgba(230,185,121,0.7),inset 0 1px 0 rgba(255,255,255,0.4);transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .25s ease}
+  .search button:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 16px 34px -12px rgba(230,185,121,0.8)}
+  .search button:active:not(:disabled){transform:translateY(0) scale(.99)}
+  .search button:disabled{opacity:.45;cursor:default}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0;max-width:680px}
+  .chip{font-family:var(--mono);font-size:10.5px;letter-spacing:0.08em;color:var(--muted);background:var(--surface);border:1px solid var(--line);padding:8px 13px;border-radius:999px;transition:color .2s ease,border-color .2s ease,background .2s ease}
+  .chip:hover{color:var(--gold-2);border-color:rgba(230,185,121,0.4);background:rgba(230,185,121,0.05)}
+
+  .status{margin:24px 0 0;color:var(--muted);font-size:13.5px;min-height:20px}
+  .spin{display:inline-block;width:14px;height:14px;margin-right:8px;border:2px solid rgba(230,185,121,0.25);border-top-color:var(--gold-2);border-radius:50%;vertical-align:-2px;animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* result cards */
+  .cards{margin:22px 0 0;display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(330px,1fr))}
+  .card{display:flex;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:15px;box-shadow:var(--shadow-sm);transition:border-color .3s cubic-bezier(.2,.8,.2,1),transform .3s cubic-bezier(.2,.8,.2,1)}
+  .card:hover{border-color:rgba(230,185,121,0.3);transform:translateY(-2px)}
+  .card .thumb{width:84px;height:84px;border-radius:12px;flex:none;object-fit:cover;background:var(--accent)}
+  /* favicons/logos: don't stretch — center them on a dark tile */
+  .card .thumb.logo{object-fit:contain;padding:16px;background:var(--surface-2);border:1px solid var(--line)}
+  .card .thumb.ph{display:grid;place-items:center;font-family:var(--disp);font-weight:600;color:var(--on-gold);font-size:28px}
+  .card .info{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+  .card .rank{font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-2)}
+  .card .title{font-family:var(--disp);font-weight:400;font-size:16px;line-height:1.3;letter-spacing:-0.01em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .card .src{font-size:12px;color:var(--faint)}
+  .card .btns{display:flex;gap:8px;margin-top:auto;flex-wrap:wrap}
+  .btn{font-family:var(--mono);font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;font-weight:500;padding:9px 13px;border-radius:9px;border:1px solid rgba(230,185,121,0.25);background:rgba(230,185,121,0.07);color:var(--gold-2);transition:background .2s ease,color .2s ease,border-color .2s ease}
+  .btn:hover{background:var(--accent);color:var(--on-gold);border-color:transparent}
+  .btn.ghost{background:transparent;color:var(--muted);border-color:var(--line)}
+  .btn.ghost:hover{background:var(--ink);color:#0c0700;border-color:transparent}
+
+  /* Google News warning */
+  .warn{margin-top:10px;background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:12px;padding:12px 14px;font-size:12.5px;color:var(--warn-ink);line-height:1.55}
+  .warn a{font-weight:600;text-decoration:underline;color:var(--gold-2)}
+  .warn input{width:100%;margin-top:8px;padding:9px 11px;border:1px solid var(--warn-line);border-radius:8px;font-size:12.5px;outline:none;background:var(--surface-2);color:var(--ink);font-family:var(--sans)}
+
+  /* right panel */
+  .panel{background:var(--surface);border-left:1px solid var(--line);padding:24px 18px;display:flex;flex-direction:column;height:100vh;position:sticky;top:0}
+  .panel h2{font-family:var(--disp);font-weight:400;font-size:20px;letter-spacing:-0.01em;margin:0 0 4px}
+  .panel .pmeta{font-family:var(--mono);font-size:10.5px;letter-spacing:0.06em;color:var(--faint);margin-bottom:16px;text-transform:uppercase}
+  .ideas{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;margin:0 -4px;padding:0 4px}
+  .idea{display:flex;gap:9px;align-items:flex-start;background:var(--surface-2);border:1px solid var(--line-soft);border-radius:10px;padding:11px 12px;transition:border-color .2s ease}
+  .idea:hover{border-color:rgba(230,185,121,0.25)}
+  .idea .pick-row{display:flex;gap:9px;align-items:flex-start;flex:1;min-width:0;cursor:pointer}
+  .idea input{margin-top:2px;flex:none;width:15px;height:15px;accent-color:var(--gold-1)}
+  .idea .txt{font-size:13px;line-height:1.45;color:var(--ink)}
+  .idea .meta{font-family:var(--mono);font-size:10px;letter-spacing:0.04em;color:var(--faint);margin-top:4px}
+  .idea .del{flex:none;border:none;background:none;color:var(--faint);font-size:17px;line-height:1;padding:0 2px;border-radius:6px;align-self:center}
+  .idea .del:hover{color:#f06a5a;background:rgba(240,106,90,0.12)}
+  .empty{color:var(--faint);font-size:13px;text-align:center;margin-top:40px;padding:0 10px;line-height:1.6}
+  .pactions{display:flex;gap:9px;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
+  .pactions button{flex:1;padding:12px;border-radius:11px;font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;border:none;transition:transform .2s ease,box-shadow .25s ease,background .2s ease}
+  .pactions .preview{background:rgba(230,185,121,0.10);color:var(--gold-2);border:1px solid rgba(230,185,121,0.25)}
+  .pactions .preview:hover:not(:disabled){background:rgba(230,185,121,0.16)}
+  .pactions .export{background:var(--accent);color:var(--on-gold);box-shadow:0 10px 24px -12px rgba(230,185,121,0.75),inset 0 1px 0 rgba(255,255,255,0.4)}
+  .pactions .export:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 16px 32px -12px rgba(230,185,121,0.85)}
+  .pactions button:disabled{opacity:.4;cursor:default}
+  .selbar{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:10.5px;letter-spacing:0.06em;color:var(--muted);margin-bottom:8px;text-transform:uppercase}
+  .selbar button{font-family:var(--mono);font-size:10px;letter-spacing:0.06em;color:var(--gold-2);background:none;border:none;font-weight:500;text-transform:uppercase}
+  .selbar button:hover{color:var(--gold-1)}
+
+  /* modal */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);display:none;place-items:center;z-index:50;padding:20px}
+  .modal.open{display:grid}
+  .sheet{background:var(--surface);border:1px solid var(--line);border-radius:18px;max-width:560px;width:100%;max-height:84vh;display:flex;flex-direction:column;box-shadow:var(--shadow-md);overflow:hidden}
+  .sheet .head{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+  .sheet .head h3{font-family:var(--disp);font-weight:400;font-size:18px;letter-spacing:-0.01em;margin:0;line-height:1.3}
+  .sheet .head .x{background:none;border:none;font-size:24px;color:var(--faint);line-height:1}
+  .sheet .head .x:hover{color:var(--ink)}
+  .sheet .body{padding:14px 20px;overflow-y:auto;flex:1}
+  .sheet .foot{padding:14px 20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .sheet .foot .l{font-family:var(--mono);font-size:11px;letter-spacing:0.04em;color:var(--muted)}
+  .sheet .foot button{padding:11px 20px;border-radius:11px;font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;border:none;background:var(--accent);color:var(--on-gold);box-shadow:0 8px 20px -10px rgba(230,185,121,0.7)}
+  .sheet .foot button:hover{transform:translateY(-1px)}
+  .pick{display:flex;gap:9px;align-items:flex-start;padding:10px 4px;border-bottom:1px solid var(--line-soft);cursor:pointer}
+  .pick input{margin-top:2px;width:15px;height:15px;accent-color:var(--gold-1)}
+  .pick .txt{font-size:13.5px;line-height:1.45}
+  .pick .txt b{color:var(--gold-2);font-weight:600}
+
+  /* preview table */
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:9px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+  th{font-family:var(--mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);position:sticky;top:0;background:var(--surface)}
+  td.r{font-family:var(--mono);color:var(--gold-2);font-weight:500;width:34px}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- ── main column ─────────────────────────────────────────── -->
+  <div class="col">
+    <header class="bar">
+      <div class="bar-left">
+        <a class="backlink" href="index.html" aria-label="Back to Tester.io">
+          <svg class="arr" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span class="txt">Tester.io</span>
+        </a>
+        <div class="brand">
+          <span class="mark"><svg viewBox="0 0 24 24"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="15 7 21 7 21 13"/></svg></span>
+          Trend <em>Finder</em>
+        </div>
+      </div>
+      <span class="badge" id="apiBadge"><span class="dot"></span> <span id="apiText">checking…</span></span>
+    </header>
+
+    <main class="main">
+      <div class="eyebrow">Trend research</div>
+      <h1>Find what's <em>trending</em> first.</h1>
+      <p class="sub">Search trending articles across Google News, Reddit &amp; Hacker News. Extract the idea lists inside them with Gemini, pick the ones you want, and export to CSV.</p>
+
+      <form class="search" id="searchForm" autocomplete="off">
+        <svg class="lens" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="q" placeholder="Try best camping gear, kitchen gadgets, productivity tools…" />
+        <button type="submit" id="searchBtn">Search</button>
+      </form>
+      <div class="chips" id="chips"></div>
+
+      <div class="status" id="status"></div>
+      <div class="cards" id="cards"></div>
+    </main>
+  </div>
+
+  <!-- ── right panel ─────────────────────────────────────────── -->
+  <aside class="panel">
+    <h2>Idea panel</h2>
+    <div class="pmeta" id="panelMeta">No ideas yet</div>
+    <div class="selbar" id="selBar" style="display:none">
+      <span id="selCount">0 selected</span>
+      <span><button id="selAll">Select all</button> · <button id="selNone">Deselect</button> · <button id="clearAll">Clear all</button></span>
+    </div>
+    <div class="ideas" id="ideas">
+      <div class="empty">Click <b>Extract Ideas</b> or <b>Browse &amp; Pick</b> on any article to collect ideas here.</div>
+    </div>
+    <div class="pactions">
+      <button class="preview" id="previewBtn" disabled>Preview</button>
+      <button class="export" id="exportBtn" disabled>Export CSV</button>
+    </div>
+  </aside>
+</div>
+
+<!-- ── Browse & Pick / Preview modal ─────────────────────────── -->
+<div class="modal" id="modal">
+  <div class="sheet">
+    <div class="head">
+      <h3 id="modalTitle">…</h3>
+      <button class="x" id="modalClose">&times;</button>
+    </div>
+    <div class="body" id="modalBody"></div>
+    <div class="foot">
+      <span class="l" id="modalFootL"></span>
+      <button id="modalAction">Add selected</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const FLASK = "http://localhost:5001";   // scraping + extraction API
+const NODE  = "";                         // same origin (this Node server) for /img
+
+const $ = s => document.querySelector(s);
+const cardsEl = $("#cards"), statusEl = $("#status"), ideasEl = $("#ideas");
+let ideaStore = [];     // {id, idea, rank, sourceTitle, sourceUrl, checked}
+let nextId = 1;
+let modalMode = null, modalPayload = null;
+
+const esc = s => (s||"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const img = u => u ? "/img?url=" + encodeURIComponent(u) : null;
+
+// ── API status badge ─────────────────────────────────────────
+async function checkApi(){
+  try{
+    const r = await fetch(FLASK + "/api/health"); const d = await r.json();
+    $("#apiText").textContent = d.gemini_configured ? "Gemini ready" : "Gemini key missing";
+    $("#apiBadge").classList.toggle("off", !d.gemini_configured);
+  }catch{
+    $("#apiText").textContent = "Flask API offline (:5001)";
+    $("#apiBadge").classList.add("off");
+  }
+}
+
+// ── search ───────────────────────────────────────────────────
+const EXAMPLES = ["best camping gear","kitchen gadgets","fitness gear","productivity tools","photography accessories"];
+$("#chips").innerHTML = EXAMPLES.map(e=>`<button class="chip" type="button">${e}</button>`).join("");
+$("#chips").addEventListener("click", e=>{ if(e.target.classList.contains("chip")){ $("#q").value = e.target.textContent; doSearch(); }});
+
+$("#searchForm").addEventListener("submit", e=>{ e.preventDefault(); doSearch(); });
+
+async function doSearch(){
+  const q = $("#q").value.trim();
+  if(!q) return;
+  cardsEl.innerHTML = ""; $("#searchBtn").disabled = true;
+  statusEl.innerHTML = `<span class="spin"></span>Searching Google News, Reddit & Hacker News for “${esc(q)}”…`;
+  try{
+    const r = await fetch(FLASK + "/api/trending?q=" + encodeURIComponent(q));
+    const d = await r.json();
+    if(!r.ok){ statusEl.textContent = d.error || "Search failed."; return; }
+    if(!d.results.length){ statusEl.textContent = "No results. Try another topic."; return; }
+    statusEl.textContent = `Top ${d.results.length} trending articles for “${d.query}”`;
+    cardsEl.innerHTML = d.results.map(cardHtml).join("");
+  }catch{
+    statusEl.textContent = "Could not reach the Flask API. Is server.py running on :5001?";
+  }finally{ $("#searchBtn").disabled = false; }
+}
+
+function cardHtml(r){
+  const t = img(r.thumbnail);
+  // Small favicon/logo images get the "logo" style (centered, not stretched).
+  const isLogo = (r.thumbnail||"").includes("s2/favicons");
+  const cls = isLogo ? "thumb logo" : "thumb";
+  const thumb = t
+    ? `<img class="${cls}" src="${esc(t)}" alt="" onerror="this.outerHTML='<div class=\\'thumb ph\\'>${esc((r.title||'?')[0]||'?')}</div>'">`
+    : `<div class="thumb ph">${esc((r.title||'?')[0]||'?')}</div>`;
+  return `<article class="card" data-url="${esc(r.link)}" data-title="${esc(r.title)}" data-source="${esc(r.source)}">
+    ${thumb}
+    <div class="info">
+      <span class="rank">#${r.rank} · ${esc(r.source)}</span>
+      <div class="title">${esc(r.title)}</div>
+      <div class="btns">
+        <button class="btn" data-act="extract">Extract Ideas</button>
+        <button class="btn ghost" data-act="pick">Browse &amp; Pick</button>
+      </div>
+      <div class="warnhost"></div>
+    </div>
+  </article>`;
+}
+
+// card button delegation
+cardsEl.addEventListener("click", e=>{
+  const btn = e.target.closest("button[data-act]"); if(!btn) return;
+  const card = e.target.closest(".card");
+  const url = card.dataset.url, title = card.dataset.title, source = card.dataset.source;
+  if(btn.dataset.act === "extract") extractInto(card, url, title, source, false);
+  else extractInto(card, url, title, source, true);
+});
+
+// ── extraction (shared by Extract Ideas + Browse & Pick) ─────
+async function extractInto(card, url, title, source, pickMode){
+  const host = card.querySelector(".warnhost");
+  host.innerHTML = `<div class="status" style="margin:8px 0 0"><span class="spin"></span>Reading article & extracting ideas…</div>`;
+  try{
+    const r = await fetch(FLASK + "/api/extract?url=" + encodeURIComponent(url));
+    const d = await r.json();
+
+    if(d.needs_manual_url){ host.innerHTML = warnHtml(url); return; }
+    if(!r.ok){ host.innerHTML = `<div class="warn">${esc(d.error||"Extraction failed.")}</div>`; return; }
+    if(!d.items.length){ host.innerHTML = `<div class="warn">No idea list found in this article.</div>`; return; }
+
+    host.innerHTML = "";
+    const meta = { title: d.title || title, url: d.url || url, source };
+    if(pickMode) openPickModal(d.items, meta);
+    else { addIdeas(d.items, meta); flash(host, `Added ${d.items.length} ideas (via ${d.method}).`); }
+  }catch{
+    host.innerHTML = `<div class="warn">Could not reach the Flask API.</div>`;
+  }
+}
+
+function flash(host, msg){ host.innerHTML = `<div class="status" style="margin:8px 0 0;color:#16a34a">✓ ${esc(msg)}</div>`; setTimeout(()=>{host.innerHTML="";}, 3500); }
+
+// yellow Google News warning + paste box
+function warnHtml(origUrl){
+  return `<div class="warn">
+    ⚠️ Google News redirect link. <a href="${esc(origUrl)}" target="_blank" rel="noopener">Open article ↗</a>,
+    wait for the real page to load, copy its URL, paste it below and press Enter.
+    <input type="text" placeholder="Paste the real article URL here…" data-paste="1" />
+  </div>`;
+}
+cardsEl.addEventListener("keydown", e=>{
+  if(e.key==="Enter" && e.target.dataset.paste){
+    e.preventDefault();
+    const real = e.target.value.trim(); if(!real) return;
+    const card = e.target.closest(".card");
+    extractInto(card, real, card.dataset.title, card.dataset.source, false);
+  }
+});
+
+// ── idea panel ───────────────────────────────────────────────
+function addIdeas(items, meta){
+  items.forEach(it=>{
+    ideaStore.push({ id: nextId++, idea: it.idea, rank: it.rank,
+      sourceTitle: meta.title, sourceUrl: meta.url, source: meta.source||"", checked: true });
+  });
+  renderPanel();
+}
+
+function renderPanel(){
+  const n = ideaStore.length;
+  $("#panelMeta").textContent = n ? `${n} ideas from your articles` : "No ideas yet";
+  $("#selBar").style.display = n ? "flex" : "none";
+  if(!n){ ideasEl.innerHTML = `<div class="empty">Click <b>Extract Ideas</b> or <b>Browse &amp; Pick</b> on any article to collect ideas here.</div>`; }
+  else{
+    ideasEl.innerHTML = ideaStore.map(o=>`
+      <div class="idea">
+        <label class="pick-row">
+          <input type="checkbox" data-id="${o.id}" ${o.checked?"checked":""}>
+          <span>
+            <span class="txt">${esc(o.idea)}</span>
+            <span class="meta">#${o.rank} · ${esc(o.source||o.sourceTitle)}</span>
+          </span>
+        </label>
+        <button class="del" data-del="${o.id}" title="Delete this idea" aria-label="Delete">&times;</button>
+      </div>`).join("");
+  }
+  updateSel();
+}
+ideasEl.addEventListener("change", e=>{
+  const id = +e.target.dataset.id;
+  const o = ideaStore.find(x=>x.id===id); if(o) o.checked = e.target.checked;
+  updateSel();
+});
+// Delete a single idea from the panel.
+ideasEl.addEventListener("click", e=>{
+  const btn = e.target.closest("button[data-del]"); if(!btn) return;
+  const id = +btn.dataset.del;
+  ideaStore = ideaStore.filter(o=>o.id!==id);
+  renderPanel();
+});
+$("#selAll").addEventListener("click", ()=>{ ideaStore.forEach(o=>o.checked=true); renderPanel(); });
+$("#selNone").addEventListener("click", ()=>{ ideaStore.forEach(o=>o.checked=false); renderPanel(); });
+// Clear the entire idea panel (with a quick confirm to avoid accidents).
+$("#clearAll").addEventListener("click", ()=>{
+  if(!ideaStore.length) return;
+  if(confirm(`Clear all ${ideaStore.length} ideas from the panel?`)){ ideaStore = []; renderPanel(); }
+});
+
+function selected(){ return ideaStore.filter(o=>o.checked); }
+function updateSel(){
+  const s = selected().length;
+  $("#selCount").textContent = `${s} selected`;
+  $("#previewBtn").disabled = s===0;
+  $("#exportBtn").disabled = s===0;
+}
+
+// ── Browse & Pick modal ──────────────────────────────────────
+function openPickModal(items, meta){
+  modalMode = "pick"; modalPayload = { items, meta };
+  $("#modalTitle").textContent = "Browse & Pick — " + (meta.title||"article");
+  $("#modalBody").innerHTML = items.map((it,i)=>`
+    <label class="pick">
+      <input type="checkbox" data-i="${i}" checked>
+      <span class="txt"><b>#${it.rank}</b> ${esc(it.idea)}</span>
+    </label>`).join("");
+  $("#modalFootL").textContent = `${items.length} ideas found`;
+  $("#modalAction").textContent = "Add selected";
+  $("#modal").classList.add("open");
+}
+
+function openPreviewModal(){
+  modalMode = "preview";
+  const rows = selected();
+  $("#modalTitle").textContent = "Preview — selected ideas";
+  $("#modalBody").innerHTML = `<table><thead><tr><th>#</th><th>Idea</th><th>Source</th></tr></thead><tbody>${
+    rows.map((o,i)=>`<tr><td class="r">${i+1}</td><td>${esc(o.idea)}</td><td>${esc(o.source||o.sourceTitle)}</td></tr>`).join("")
+  }</tbody></table>`;
+  $("#modalFootL").textContent = `${rows.length} ideas selected`;
+  $("#modalAction").textContent = "Export CSV";
+  $("#modal").classList.add("open");
+}
+
+$("#modalClose").addEventListener("click", closeModal);
+$("#modal").addEventListener("click", e=>{ if(e.target.id==="modal") closeModal(); });
+function closeModal(){ $("#modal").classList.remove("open"); }
+
+$("#modalAction").addEventListener("click", ()=>{
+  if(modalMode==="pick"){
+    const keep = [];
+    $("#modalBody").querySelectorAll("input[data-i]").forEach(cb=>{ if(cb.checked) keep.push(modalPayload.items[+cb.dataset.i]); });
+    if(keep.length) addIdeas(keep, modalPayload.meta);
+    closeModal();
+  }else if(modalMode==="preview"){
+    closeModal(); exportCsv();
+  }
+});
+
+// ── preview + export ─────────────────────────────────────────
+$("#previewBtn").addEventListener("click", openPreviewModal);
+$("#exportBtn").addEventListener("click", exportCsv);
+
+function exportCsv(){
+  const rows = selected();
+  if(!rows.length) return;
+  const head = ["Idea","Rank","Source Title","Source URL"];
+  const csvCell = v => `"${String(v??"").replace(/"/g,'""')}"`;
+  const lines = [head.map(csvCell).join(",")];
+  rows.forEach(o=> lines.push([o.idea,o.rank,o.sourceTitle,o.sourceUrl].map(csvCell).join(",")));
+  // BOM so Excel opens UTF-8 cleanly.
+  const blob = new Blob(["﻿" + lines.join("\r\n")], {type:"text/csv;charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "trend-finder-ideas.csv";
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+checkApi();
+</script>
+</body>
+</html>

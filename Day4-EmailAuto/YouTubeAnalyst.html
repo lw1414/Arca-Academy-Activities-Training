@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>YouTube Analyst — Tester.io</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Montserrat:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#000; --surface:#0b0b0c; --surface-2:#101012; --ink:#f6f1e6; --muted:#9a9388; --faint:#6a6a6a;
+    --line:rgba(255,255,255,0.08); --line-soft:rgba(255,255,255,0.05);
+    --gold-1:#C6A559; --gold-2:#E6B979; --gold-deep:#8a6f33; --on-gold:#0c0700;
+    --accent:linear-gradient(135deg,#E6B979 0%,#C6A559 100%);
+    --ok:#5bd6a0; --warn:#e6b979; --danger:#f06a5a;
+    --shadow-sm:0 2px 10px rgba(0,0,0,0.5);
+    --shadow-md:0 22px 50px -22px rgba(230,185,121,0.28),0 8px 20px -12px rgba(0,0,0,0.7);
+    --disp:'Fraunces','Times New Roman',serif; --sans:'Montserrat',system-ui,sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+    --r:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;min-height:100vh;line-height:1.5;
+    -webkit-font-smoothing:antialiased;font-feature-settings:"ss01","ss02","cv11";overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  button{font-family:var(--sans);cursor:pointer}
+  ::selection{background:var(--gold-2);color:#0c0700}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:100;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");}
+
+  header.bar{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 28px;
+    border-bottom:1px solid var(--line);backdrop-filter:blur(12px) saturate(120%);
+    background:linear-gradient(180deg,rgba(0,0,0,0.72),rgba(0,0,0,0.3));position:sticky;top:0;z-index:30}
+  .bar-left{display:flex;align-items:center;gap:18px;min-width:0}
+  .brand{display:flex;align-items:center;gap:12px;font-family:var(--disp);font-weight:400;font-size:19px;letter-spacing:-0.01em}
+  .brand em{font-style:italic;background:var(--accent);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .brand .mark{width:34px;height:34px;border-radius:10px;background:var(--accent);display:grid;place-items:center;
+    box-shadow:0 8px 22px -8px rgba(230,185,121,0.6),inset 0 1px 0 rgba(255,255,255,0.4)}
+  .brand .mark svg{width:16px;height:16px;fill:var(--on-gold)}
+  .backlink{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:10.5px;letter-spacing:0.18em;
+    text-transform:uppercase;color:var(--muted);padding:9px 15px 9px 12px;border:1px solid var(--line);border-radius:999px;
+    transition:color .25s cubic-bezier(.2,.8,.2,1),border-color .25s ease,background .25s ease}
+  .backlink .arr{width:14px;height:14px;stroke:var(--gold-2);stroke-width:2;fill:none;transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+  .backlink:hover{color:var(--ink);border-color:rgba(230,185,121,0.45);background:rgba(230,185,121,0.06)}
+  .backlink:hover .arr{transform:translateX(-3px)}
+  .backlink:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(230,185,121,0.35);border-color:var(--gold-2)}
+  .backlink:active{transform:scale(.98)}
+  @media(max-width:560px){.backlink .txt{display:none}.backlink{padding:9px 11px}}
+
+  .wrap{max-width:880px;margin:0 auto;padding:44px 28px 80px}
+  .eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:0.32em;text-transform:uppercase;color:var(--gold-2);
+    display:flex;align-items:center;gap:10px;margin:0 0 18px}
+  .eyebrow::before{content:"";width:24px;height:1px;background:var(--gold-2)}
+  h1{font-family:var(--disp);font-weight:300;letter-spacing:-0.03em;line-height:1.02;font-size:clamp(32px,5vw,56px);margin:0 0 14px}
+  h1 em{font-style:italic;background:var(--accent);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--muted);margin:0 0 36px;font-weight:300;max-width:60ch;line-height:1.7;font-size:14.5px}
+
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:28px;box-shadow:var(--shadow-sm);margin-bottom:18px}
+  .panel-h{font-family:var(--mono);font-size:10.5px;letter-spacing:0.24em;text-transform:uppercase;color:var(--gold-2);margin:0 0 20px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:620px){.grid2{grid-template-columns:1fr}}
+  .field{display:flex;flex-direction:column;gap:7px;margin-bottom:18px}
+  .field:last-of-type{margin-bottom:0}
+  .field label{font-family:var(--mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink)}
+  .field label .opt{color:var(--faint)}
+  .field .help{font-family:var(--mono);font-size:10px;letter-spacing:0.02em;color:var(--faint);line-height:1.5}
+  input[type=text],input[type=number],select{width:100%;background:var(--surface-2);border:1px solid var(--line);border-radius:11px;
+    color:var(--ink);font-family:var(--sans);font-size:14px;padding:12px 14px;transition:border-color .2s ease,box-shadow .2s ease,background .2s ease}
+  input::placeholder{color:var(--faint)}
+  input:hover,select:hover{border-color:rgba(255,255,255,0.16)}
+  input:focus-visible,select:focus-visible{outline:none;border-color:var(--gold-2);background:#0c0d10;box-shadow:0 0 0 3px rgba(230,185,121,0.16)}
+  select{appearance:none;-webkit-appearance:none;cursor:pointer;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%239a9388' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:40px}
+  select option{background:#0c0d10;color:var(--ink)}
+  .inline{display:flex;align-items:flex-end;gap:24px;flex-wrap:wrap}
+  .inline .field{margin-bottom:0}
+  .check{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted);cursor:pointer;padding-bottom:11px}
+  .check input{width:16px;height:16px;accent-color:var(--gold-1)}
+
+  .run{margin-top:24px;width:100%;border:none;color:var(--on-gold);font-family:var(--mono);font-weight:500;font-size:12px;
+    letter-spacing:0.18em;text-transform:uppercase;background:var(--accent);padding:15px;border-radius:12px;
+    box-shadow:0 12px 30px -12px rgba(230,185,121,0.7),inset 0 1px 0 rgba(255,255,255,0.4);
+    transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .25s ease}
+  .run:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 18px 38px -12px rgba(230,185,121,0.82)}
+  .run:active:not(:disabled){transform:translateY(0) scale(.99)}
+  .run:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+
+  .status-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+  .badge{font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;
+    padding:7px 13px;border-radius:999px;border:1px solid var(--line);color:var(--muted);background:var(--surface-2);
+    display:inline-flex;align-items:center;gap:8px}
+  .badge .dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+  .badge.running{color:var(--warn);border-color:rgba(230,185,121,0.4)}
+  .badge.success{color:var(--ok);border-color:rgba(91,214,160,0.4)}
+  .badge.error{color:var(--danger);border-color:rgba(240,106,90,0.4)}
+
+  .stages{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:0 0 18px;padding:0;list-style:none}
+  .stages li{padding:11px 6px;border-radius:10px;text-align:center;font-family:var(--mono);font-size:10px;letter-spacing:0.08em;
+    text-transform:uppercase;background:var(--surface-2);border:1px solid var(--line);color:var(--faint);transition:.3s cubic-bezier(.2,.8,.2,1)}
+  .stages li.on{background:rgba(230,185,121,0.12);border-color:rgba(230,185,121,0.5);color:var(--gold-2)}
+
+  pre#log{background:#060606;border:1px solid var(--line);border-radius:12px;padding:16px;font-family:var(--mono);font-size:11.5px;
+    line-height:1.6;color:#c9c2b4;height:280px;overflow:auto;white-space:pre-wrap;margin:0}
+  .foot{text-align:center;color:var(--faint);font-family:var(--mono);font-size:10.5px;letter-spacing:0.06em;margin-top:30px}
+  .foot code{color:var(--muted)}
+  .offline-note{color:var(--danger)}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="bar-left">
+    <a class="backlink" href="index.html" aria-label="Back to Tester.io">
+      <svg class="arr" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <span class="txt">Tester.io</span>
+    </a>
+    <div class="brand">
+      <span class="mark"><svg viewBox="0 0 24 24"><path d="M9.5 8.5v7l6-3.5-6-3.5z"/></svg></span>
+      YouTube <em>Analyst</em>
+    </div>
+  </div>
+  <span class="badge" id="badge"><span class="dot"></span> idle</span>
+</header>
+
+<div class="wrap">
+  <div class="eyebrow">Audience research</div>
+  <h1>Read the room <em>before you film.</em></h1>
+  <p class="sub">Analyze trending videos across regions, channels &amp; keywords, build a Sheets + Slides report, and email it — all from one run. The browser only triggers the pipeline; the deterministic Python tools do the work.</p>
+
+  <!-- Config -->
+  <section class="panel">
+    <h2 class="panel-h">Report inputs</h2>
+    <div class="grid2">
+      <div class="field">
+        <label>Trending region</label>
+        <input id="region" type="text" value="US" placeholder="US, GB, PH, JP…" />
+        <span class="help">2-letter region code. Blank = skip trending.</span>
+      </div>
+      <div class="field">
+        <label>Content type</label>
+        <select id="category"><option value="">All categories</option></select>
+        <span class="help">Filter trending by category.</span>
+      </div>
+    </div>
+
+    <div class="grid2" style="margin-top:18px">
+      <div class="field">
+        <label>Keywords <span class="opt">(optional)</span></label>
+        <input id="keywords" type="text" placeholder="AI, fitness, gaming" />
+        <span class="help">Comma-separated search terms.</span>
+      </div>
+      <div class="field">
+        <label>Match precision</label>
+        <select id="match">
+          <option value="related">Related — broad (default)</option>
+          <option value="exact">Exact — quoted phrase must appear</option>
+          <option value="strict">Strict — phrase must be in the title</option>
+        </select>
+        <span class="help">How tightly results match your keywords.</span>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="field">
+        <label>Channel IDs <span class="opt">(optional)</span></label>
+        <input id="channels" type="text" placeholder="UCxxxx, UCyyyy" />
+        <span class="help">Comma-separated YouTube channel IDs.</span>
+      </div>
+      <div class="field">
+        <label>Format / length</label>
+        <select id="length">
+          <option value="">All formats</option>
+          <option value="reel">Reels / Shorts — ≤ 60s</option>
+          <option value="video">Videos — &gt; 60s</option>
+          <option value="mid">Standard — 1–15 min</option>
+          <option value="gt15">Long — &gt; 15 min</option>
+          <option value="gt30">Very long — &gt; 30 min</option>
+          <option value="gt60">Extended — &gt; 60 min</option>
+        </select>
+        <span class="help">Filter results by video duration.</span>
+      </div>
+    </div>
+
+    <div class="inline" style="margin-top:4px">
+      <div class="field">
+        <label>Max results / source</label>
+        <input id="max" type="number" value="25" min="1" max="50" style="width:120px" />
+      </div>
+      <label class="check"><input id="noemail" type="checkbox" /> Build only (don't send email)</label>
+    </div>
+
+    <button class="run" id="run">Run Report</button>
+  </section>
+
+  <!-- Status -->
+  <section class="panel">
+    <div class="status-top">
+      <h2 class="panel-h" style="margin:0">Pipeline status</h2>
+    </div>
+    <ol class="stages" id="stages">
+      <li data-k="Fetching">Fetch</li>
+      <li data-k="Analyzing">Analyze</li>
+      <li data-k="Sheets">Sheets</li>
+      <li data-k="Slides">Slides</li>
+      <li data-k="email">Email</li>
+    </ol>
+    <pre id="log">Waiting to run…</pre>
+  </section>
+
+  <p class="foot">WAT framework · backend <code>node serve.mjs</code> on <code>:5173</code></p>
+</div>
+
+<script>
+// The dashboard is served by Tester.io (:3000); the pipeline backend runs on :5173.
+const API = "http://localhost:5173";
+const $ = (id) => document.getElementById(id);
+const runBtn = $("run");
+let polling = null;
+
+const CATEGORIES = {
+  "1":"Film & Animation","2":"Autos & Vehicles","10":"Music","15":"Pets & Animals",
+  "17":"Sports","19":"Travel & Events","20":"Gaming","22":"People & Blogs",
+  "23":"Comedy","24":"Entertainment","25":"News & Politics","26":"Howto & Style",
+  "27":"Education","28":"Science & Technology","29":"Nonprofits & Activism"
+};
+const catSel = $("category");
+for (const [id, name] of Object.entries(CATEGORIES)) {
+  const o = document.createElement("option");
+  o.value = id; o.textContent = name; catSel.appendChild(o);
+}
+
+function setBadge(state) {
+  const map = { idle:["idle",""], running:["running…","running"], success:["success","success"], error:["error","error"] };
+  const [txt, cls] = map[state] || map.idle;
+  const b = $("badge");
+  b.className = "badge " + cls;
+  b.innerHTML = '<span class="dot"></span> ' + txt;
+}
+
+function markStages(log) {
+  document.querySelectorAll("#stages li").forEach((li) => {
+    li.classList.toggle("on", log.includes(li.dataset.k));
+  });
+}
+
+async function poll() {
+  try {
+    const r = await fetch(API + "/api/status");
+    const s = await r.json();
+    $("log").textContent = s.log || "Running…";
+    $("log").scrollTop = $("log").scrollHeight;
+    markStages(s.log || "");
+    setBadge(s.state);
+    if (s.state !== "running") {
+      clearInterval(polling); polling = null;
+      runBtn.disabled = false; runBtn.textContent = "Run Report";
+    }
+  } catch (e) {
+    $("log").innerHTML = '<span class="offline-note">Lost connection to the backend. Start it with: node serve.mjs (in youtube-analyst/, on :5173).</span>';
+    clearInterval(polling); polling = null;
+    runBtn.disabled = false; runBtn.textContent = "Run Report";
+    setBadge("error");
+  }
+}
+
+runBtn.addEventListener("click", async () => {
+  const cfg = {
+    region: $("region").value.trim(),
+    category: $("category").value.trim(),
+    keywords: $("keywords").value.trim(),
+    match: $("match").value,
+    channels: $("channels").value.trim(),
+    length: $("length").value,
+    max_results: parseInt($("max").value, 10) || 25,
+    no_email: $("noemail").checked,
+  };
+  runBtn.disabled = true;
+  runBtn.textContent = "Running…";
+  $("log").textContent = "Starting pipeline…";
+  setBadge("running");
+  try {
+    const r = await fetch(API + "/api/run", {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(cfg),
+    });
+    if (r.status === 409) { $("log").textContent = "A run is already in progress."; runBtn.disabled = false; runBtn.textContent = "Run Report"; return; }
+    if (!polling) polling = setInterval(poll, 1000);
+  } catch (e) {
+    $("log").innerHTML = '<span class="offline-note">Could not reach the backend on :5173. Start it with: node serve.mjs (in youtube-analyst/).</span>';
+    runBtn.disabled = false; runBtn.textContent = "Run Report"; setBadge("error");
+  }
+});
+
+// Reflect current backend state on load (shows "running" if a run is already going).
+(async () => { try { const r = await fetch(API + "/api/status"); const s = await r.json(); setBadge(s.state); if (s.state === "running" && !polling) polling = setInterval(poll, 1000); } catch {} })();
+</script>
+</body>
+</html>

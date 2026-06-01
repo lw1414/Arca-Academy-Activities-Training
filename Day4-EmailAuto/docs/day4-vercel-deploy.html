@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Day4-EmailAuto — Vercel Deploy Guide</title>
+<style>
+  @page { size: A4; margin: 16mm 14mm 18mm; }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:#fffaf0;color:#1a1a1a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,system-ui,sans-serif;font-size:10.5pt;line-height:1.55;-webkit-font-smoothing:antialiased}
+
+  .cover{padding:18mm 12mm 10mm;background:linear-gradient(180deg,#000 0%,#1a1208 100%);color:#f6f1e6;page-break-after:always;height:calc(100vh - 0mm);position:relative}
+  .cover .eyebrow{font-family:'JetBrains Mono',ui-monospace,Consolas,monospace;font-size:9pt;letter-spacing:0.28em;text-transform:uppercase;color:#E6B979}
+  .cover h1{font-family:Georgia,'Times New Roman',serif;font-weight:400;font-size:42pt;line-height:1.05;letter-spacing:-0.02em;margin:14pt 0 8pt;color:#f6f1e6}
+  .cover h1 em{font-style:italic;color:#E6B979}
+  .cover .sub{font-family:Georgia,serif;font-size:13pt;color:#a59c83;font-style:italic;margin-bottom:34pt;max-width:140mm}
+  .cover .meta{font-family:'JetBrains Mono',monospace;font-size:9pt;color:#8a8472;border-top:1px solid rgba(230,185,121,0.25);padding-top:14pt;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8pt}
+  .cover .arch{margin-top:42pt;padding:16pt 18pt;border:1px solid rgba(230,185,121,0.25);border-radius:6pt;background:rgba(230,185,121,0.04)}
+  .cover .arch .arch-h{font-family:'JetBrains Mono',monospace;font-size:9pt;letter-spacing:0.2em;color:#E6B979;text-transform:uppercase;margin-bottom:10pt}
+  .cover .arch pre{margin:0;font-family:'JetBrains Mono',monospace;font-size:9.5pt;line-height:1.7;color:#e6dfcc}
+
+  main{padding:0 2mm}
+  h2{font-family:Georgia,serif;font-weight:400;font-size:17pt;letter-spacing:-0.01em;color:#1a1a1a;margin:18pt 0 6pt;padding-bottom:4pt;border-bottom:1px solid #d7cda8;page-break-after:avoid}
+  h2 em{color:#8a6f33;font-style:italic}
+  h2 .ico{font-family:'JetBrains Mono',monospace;font-size:9.5pt;color:#8a6f33;margin-right:8pt}
+  h3{font-family:Georgia,serif;font-weight:500;font-size:12pt;color:#2a2418;margin:12pt 0 4pt;page-break-after:avoid}
+
+  p{margin:0 0 8pt;color:#3a3528;max-width:170mm}
+  ul,ol{padding-left:18pt;margin:4pt 0 10pt}
+  li{margin-bottom:4pt}
+
+  pre{background:#0f0f0f;color:#e6dfcc;padding:9pt 12pt;border-radius:4pt;font-family:'JetBrains Mono','SF Mono',Consolas,monospace;font-size:8.8pt;line-height:1.55;margin:6pt 0 12pt;white-space:pre-wrap;page-break-inside:avoid;border-left:3pt solid #C6A559}
+  pre .c{color:#7a7468;font-style:italic}
+  pre .k{color:#E6B979}
+  pre .s{color:#a8d5b9}
+  code{background:#f0e9d3;color:#5a4a1f;padding:1pt 5pt;border-radius:3pt;font-family:'JetBrains Mono',Consolas,monospace;font-size:9pt}
+
+  table{width:100%;border-collapse:collapse;margin:6pt 0 12pt;font-size:9.5pt;page-break-inside:avoid}
+  th,td{padding:6pt 8pt;text-align:left;border-bottom:1px solid #ece2c8;vertical-align:top}
+  th{font-family:Inter,sans-serif;font-size:8.5pt;text-transform:uppercase;letter-spacing:0.12em;color:#8a6f33;background:#f8f1de;font-weight:600}
+  td.mono,th.mono{font-family:'JetBrains Mono',Consolas,monospace;font-size:9pt}
+  td:first-child{color:#3a3528}
+
+  .callout{background:#fff4d6;border-left:3pt solid #C6A559;padding:8pt 12pt;border-radius:0 4pt 4pt 0;margin:8pt 0 12pt;font-size:9.5pt;color:#5a4a1f;page-break-inside:avoid}
+  .callout.warn{background:#fde7d6;border-left-color:#a23a2a;color:#5a2418}
+  .callout.warn strong{color:#3a1818}
+  .callout strong{color:#3a2f0a}
+
+  .step{display:flex;gap:10pt;align-items:flex-start;margin-bottom:8pt;page-break-inside:avoid}
+  .step .n{flex:0 0 22pt;font-family:'JetBrains Mono',monospace;font-size:11pt;color:#C6A559;font-weight:700;padding-top:1pt}
+  .step .body{flex:1;font-size:10pt;color:#3a3528}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8pt 18pt;margin:6pt 0 12pt}
+  .grid2 > div{font-size:9.5pt}
+
+  .toc{column-count:2;column-gap:14mm;padding:8pt 0 14pt;border-bottom:1px solid #d7cda8;margin-bottom:14pt;font-size:10pt}
+  .toc a{color:#5a4a1f;text-decoration:none;display:block;padding:2pt 0;font-family:Inter,sans-serif}
+  .toc a::before{content:"› ";color:#C6A559}
+
+  footer{margin-top:18pt;padding-top:10pt;border-top:1px solid #d7cda8;font-family:'JetBrains Mono',monospace;font-size:8pt;color:#8a8472;display:flex;justify-content:space-between}
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div class="eyebrow">Arca Academy · Day 4</div>
+  <h1>EmailAuto <em>on Vercel.</em></h1>
+  <div class="sub">A one-page guide to your deployed morning-briefing project — what runs where, what to click, and how to fix it when it breaks.</div>
+
+  <div class="meta">
+    <span>arca-academy-activities-training-pv.vercel.app</span>
+    <span>v1.0 · 2026-05-29</span>
+  </div>
+
+  <div class="arch">
+    <div class="arch-h">— Architecture at a glance</div>
+<pre>┌──────────────┐  fires GET    ┌──────────────────────┐  fetch  ┌──────────┐
+│ Vercel Cron  │ ────────────▶ │  /api/briefing       │ ──────▶ │ Supabase │
+│ 8:30 PM + 7AM│               │  (serverless fn)     │         │ form_subs│
+└──────────────┘               └──────┬───────────────┘         └──────────┘
+                                      │
+                                      ▼
+                          ┌──────────────────────┐  HTML  ┌──────────┐
+                          │  Groq (llama-3.3)    │ ─────▶ │  Resend  │ ──▶ Gmail
+                          │  summarizes leads    │        │  sends   │
+                          └──────────────────────┘        └──────────┘</pre>
+  </div>
+</section>
+
+<main>
+
+<div class="toc">
+  <a href="#what-deployed">What got deployed</a>
+  <a href="#urls">Live URLs</a>
+  <a href="#creds">Credentials &amp; secrets</a>
+  <a href="#manual">Manual trigger (curl)</a>
+  <a href="#cron">Cron schedule</a>
+  <a href="#dashboard">Dashboard "Run now"</a>
+  <a href="#change-cron">Changing the schedule</a>
+  <a href="#files">File layout</a>
+  <a href="#trouble">Troubleshooting</a>
+  <a href="#cleanup">Cleanup / rollback</a>
+</div>
+
+<h2 id="what-deployed"><span class="ico">[01]</span>What got <em>deployed</em></h2>
+<p>Vercel imports <code>lw1414/Arca-Academy-Activities-Training</code>, treats the <code>Day4-EmailAuto</code> subfolder as the project root, and serves it as a hybrid project:</p>
+<ul>
+  <li><strong>Static files</strong> — the full Tester.io marketing site (index, contact, pricing, dashboard, 11 more pages, all CSS, brand assets)</li>
+  <li><strong>One serverless function</strong> — <code>api/briefing.mjs</code> available at <code>/api/briefing</code></li>
+  <li><strong>Two cron schedules</strong> registered from <code>vercel.json</code> — both POST to <code>/api/briefing</code></li>
+</ul>
+<p>The function pulls signups from Supabase, asks Groq to rank them, renders an email-safe HTML template, sends via Resend, and logs the send to your Supabase <code>email_log</code> table.</p>
+
+<h2 id="urls"><span class="ico">[02]</span>Live <em>URLs</em></h2>
+<table>
+  <thead><tr><th>Path</th><th>What it serves</th></tr></thead>
+  <tbody>
+    <tr><td class="mono">/</td><td>Tester.io landing page</td></tr>
+    <tr><td class="mono">/dashboard.html</td><td>Admin dashboard (password gated)</td></tr>
+    <tr><td class="mono">/contact.html</td><td>Contact form — posts to Supabase + Sheets</td></tr>
+    <tr><td class="mono">/customers.html</td><td>Customer logos + case studies</td></tr>
+    <tr><td class="mono">/changelog.html</td><td>Release notes</td></tr>
+    <tr><td class="mono">/manifesto.html, /careers.html, /press.html</td><td>Company pages</td></tr>
+    <tr><td class="mono">/privacy.html, /terms.html, /security.html, /dpa.html</td><td>Legal pages</td></tr>
+    <tr><td class="mono">/status.html</td><td>Service status</td></tr>
+    <tr><td class="mono">/api/briefing</td><td>The briefing serverless function (POST/GET with <code>?secret=...</code>)</td></tr>
+  </tbody>
+</table>
+
+<h2 id="creds"><span class="ico">[03]</span>Credentials &amp; <em>secrets</em></h2>
+<table>
+  <thead><tr><th>Name</th><th>Value</th><th>Where used</th></tr></thead>
+  <tbody>
+    <tr><td>Dashboard password</td><td class="mono">tester-io-admin</td><td>Gate at <code>/dashboard.html</code></td></tr>
+    <tr><td>BRIEFING_SECRET</td><td class="mono">vuf2j6wUkarqL5KzPh79I8gNmlSGtTJAcZxdnpBoVR0Hsi3b</td><td>Required to manually call <code>/api/briefing</code>; also asked once by the dashboard's "Run now" button</td></tr>
+    <tr><td>Briefing recipient</td><td class="mono">aernestleanrivera@gmail.com</td><td>Where the daily email lands</td></tr>
+    <tr><td>From address</td><td class="mono">onboarding@resend.dev</td><td>Resend shared sender (only sends to your registered email)</td></tr>
+  </tbody>
+</table>
+<div class="callout warn"><strong>Resend free-tier rule:</strong> <code>onboarding@resend.dev</code> can only send to the email registered with Resend. To send to anyone else, verify a domain at <a href="https://resend.com/domains">resend.com/domains</a> and change <code>RESEND_FROM</code> to <code>briefing@yourdomain.com</code> in Vercel env vars.</div>
+
+<h2 id="manual"><span class="ico">[04]</span>Manual <em>trigger</em></h2>
+<p>From PowerShell:</p>
+<pre><span class="c"># Replace with your project subdomain</span>
+$URL    = <span class="s">"https://arca-academy-activities-training-pv.vercel.app/api/briefing"</span>
+$SECRET = <span class="s">"vuf2j6wUkarqL5KzPh79I8gNmlSGtTJAcZxdnpBoVR0Hsi3b"</span>
+
+<span class="c"># Dry run — renders + summarizes, no email sent</span>
+curl.exe <span class="s">"$URL`?dry=1&amp;demo=1&amp;secret=$SECRET"</span>
+
+<span class="c"># Real send with 6 sample leads</span>
+curl.exe <span class="s">"$URL`?demo=1&amp;secret=$SECRET"</span>
+
+<span class="c"># Real send with last 24h of live Supabase leads</span>
+curl.exe <span class="s">"$URL`?secret=$SECRET"</span></pre>
+<p>Expected success response:</p>
+<pre>{<span class="k">"ok"</span>:true,<span class="k">"id"</span>:<span class="s">"abc-123-..."</span>,<span class="k">"provider"</span>:<span class="s">"resend"</span>,<span class="k">"headline"</span>:<span class="s">"Strong enterprise interest overnight"</span>,<span class="k">"total"</span>:6}</pre>
+
+<h2 id="cron"><span class="ico">[05]</span>Cron <em>schedule</em></h2>
+<p>Two daily fires registered in <code>vercel.json</code>:</p>
+<table>
+  <thead><tr><th>Cron (UTC)</th><th>Asia/Manila</th><th>Use case</th></tr></thead>
+  <tbody>
+    <tr><td class="mono">30 12 * * *</td><td>8:30 PM</td><td>Evening recap</td></tr>
+    <tr><td class="mono">0 23 * * *</td><td>7:00 AM</td><td>Morning briefing (per activity spec)</td></tr>
+  </tbody>
+</table>
+<p>Check <strong>Vercel → Settings → Cron Jobs</strong> to confirm both rows are registered.</p>
+<div class="callout"><strong>Hobby plan caveat.</strong> Vercel rounds cron schedules to <strong>daily granularity</strong> — fires once per day around that time, not always exactly to the minute. Fine for a morning briefing; not suitable for minute-precise jobs.</div>
+
+<h2 id="dashboard"><span class="ico">[06]</span>Dashboard <em>"Run now"</em></h2>
+<p>The dashboard auto-detects where it's hosted:</p>
+<table>
+  <thead><tr><th>Opened from</th><th>"Run now" hits</th></tr></thead>
+  <tbody>
+    <tr><td class="mono">http://localhost:3000</td><td><code>http://localhost:3100/api/briefing/run-now</code> (your watch daemon)</td></tr>
+    <tr><td class="mono">https://...vercel.app</td><td><code>/api/briefing?secret=...</code> (same origin)</td></tr>
+  </tbody>
+</table>
+<p>On Vercel the dashboard will <strong>prompt for the BRIEFING_SECRET on first use</strong> and cache it in <code>localStorage</code>. To clear it later, open DevTools console and run <code>localStorage.removeItem("brf_secret")</code>.</p>
+
+<h2 id="change-cron"><span class="ico">[07]</span>Changing the <em>schedule</em></h2>
+<div class="step"><div class="n">01</div><div class="body">Open <code>Day4-EmailAuto/vercel.json</code> in the repo.</div></div>
+<div class="step"><div class="n">02</div><div class="body">Edit the entries inside <code>crons[]</code>. Schedule strings are UTC cron; convert from Manila by subtracting 8 hours.</div></div>
+<div class="step"><div class="n">03</div><div class="body">Commit + push to <code>training/main</code>. Vercel auto-redeploys within ~30s.</div></div>
+<div class="step"><div class="n">04</div><div class="body">Refresh <strong>Settings → Cron Jobs</strong> on Vercel to confirm the new schedule.</div></div>
+
+<h3>Common UTC ↔ Manila conversions</h3>
+<div class="grid2">
+  <div><code>0 7 * * *</code> UTC → 3 PM Manila</div>
+  <div><code>0 12 * * *</code> UTC → 8 PM Manila</div>
+  <div><code>0 23 * * *</code> UTC → 7 AM Manila</div>
+  <div><code>30 12 * * *</code> UTC → 8:30 PM Manila</div>
+</div>
+
+<h2 id="files"><span class="ico">[08]</span>File <em>layout</em></h2>
+<pre>Day4-EmailAuto/
+├── api/
+│   └── briefing.mjs              <span class="c"># Vercel serverless handler</span>
+├── briefing/
+│   └── template.mjs              <span class="c"># Email-safe HTML renderer</span>
+├── morning-briefing.mjs          <span class="c"># Local CLI + watch daemon (not used on Vercel)</span>
+├── dashboard.html                <span class="c"># Admin UI w/ auto-detect for API base</span>
+├── index.html, contact.html, …   <span class="c"># 14 marketing pages</span>
+├── css/subpage.css, brand_assets <span class="c"># Static assets</span>
+├── supabase/
+│   ├── dashboard-tables.sql      <span class="c"># Creates email_log + newsletters</span>
+│   └── email-log-add-briefing-source.sql
+├── tests/                        <span class="c"># Playwright (form, links, briefing preview)</span>
+├── vercel.json                   <span class="c"># Crons + function config</span>
+├── package.json
+├── .env.example
+└── README.md, DEPLOY.md</pre>
+
+<h2 id="trouble"><span class="ico">[09]</span>Trouble<em>shooting</em></h2>
+<table>
+  <thead><tr><th>Symptom</th><th>Fix</th></tr></thead>
+  <tbody>
+    <tr><td>Build fails: "no package.json found"</td><td>Vercel → Settings → General → <strong>Root Directory</strong> must be <code>Day4-EmailAuto</code></td></tr>
+    <tr><td>Build fails: "No matching version for X"</td><td>Bad version in <code>package.json</code>. Check the npm registry and bump to a real version.</td></tr>
+    <tr><td>Manual trigger returns <code>401 invalid_secret</code></td><td>Secret in the URL doesn't match Vercel env var. Re-check it.</td></tr>
+    <tr><td>Manual trigger returns Resend rejection</td><td><code>BRIEFING_TO</code> doesn't match Resend-registered email. Change it or verify a domain.</td></tr>
+    <tr><td>Email lands in spam</td><td>Verify a domain in Resend, change <code>RESEND_FROM</code> to <code>briefing@yourdomain.com</code></td></tr>
+    <tr><td>Cron doesn't fire</td><td>Vercel re-reads <code>vercel.json</code> only on deploy. After editing schedule, push to trigger redeploy.</td></tr>
+    <tr><td>Dashboard "Run now" button errors on Vercel</td><td>Clear cached secret: open DevTools console → <code>localStorage.removeItem("brf_secret")</code> → refresh → re-enter</td></tr>
+    <tr><td>Briefings missing from Email Log tab</td><td>Run <code>supabase/email-log-add-briefing-source.sql</code> once in the Supabase SQL editor</td></tr>
+  </tbody>
+</table>
+
+<h2 id="cleanup"><span class="ico">[10]</span>Cleanup / <em>rollback</em></h2>
+<p><strong>To pause the briefing without deleting:</strong></p>
+<ul>
+  <li>Vercel → Settings → Cron Jobs → toggle each cron OFF</li>
+  <li>Or remove the <code>crons</code> array from <code>vercel.json</code> and push → redeploy</li>
+</ul>
+<p><strong>To delete the deployed project:</strong></p>
+<ul>
+  <li>Vercel → Settings → Advanced → <strong>Delete Project</strong></li>
+  <li>Repo files stay intact; you can re-deploy any time</li>
+</ul>
+<p><strong>To revert any code change:</strong></p>
+<pre>git revert &lt;commit-sha&gt;
+git push training</pre>
+<p>Vercel auto-redeploys from the revert commit.</p>
+
+<footer>
+  <span>Day4-EmailAuto — Vercel Deploy Guide</span>
+  <span>arca-academy-activities-training-pv.vercel.app</span>
+</footer>
+
+</main>
+</body>
+</html>
